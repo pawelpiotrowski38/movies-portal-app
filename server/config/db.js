@@ -1,12 +1,15 @@
 import pkg from 'pg';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const { Pool } = pkg;
 
 const pool = new Pool({
-    host: 'localhost',
-    user: 'postgres',
-    password: 'Qwerty123',
-    database: 'moviesdatabase',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
 });
 
 pool.on('acquire', (connection) => {
