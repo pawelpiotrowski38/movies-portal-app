@@ -1,0 +1,29 @@
+@use '../styles/abstracts/variables' as *;
+@use '../styles/abstracts/mixins' as *;
+
+.header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-height: 3.25rem;
+    margin-bottom: 0.5rem;
+    padding: 0 0.75rem;
+    background-color: var(--component-background-color);
+    transition: all $transition-time ease-in-out;
+    z-index: 10;
+
+    &__buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all $transition-time ease-in-out;
+    }
+}
+
+@include breakpoint-xxl {
+    .header {
+        padding: 0 1rem;
+    }
+}

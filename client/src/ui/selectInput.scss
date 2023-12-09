@@ -1,0 +1,79 @@
+@use '../styles/abstracts/variables' as *;
+
+.select-input {
+    position: relative;
+
+    &__label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0.3125rem 0.5rem;
+        border: 0.125rem solid var(--button-background-color);
+        border-radius: $border-radius-medium;
+        background-color: var(--component-background-color);
+        color: var(--primary-text-color);
+        font-size: 0.875rem;
+        transition: all $transition-time ease-in-out;
+
+        & span {
+            margin-right: 0.5rem;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &__arrow {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0.375rem 0.375rem 0 0.375rem;
+        border-color: var(--primary-text-color) transparent transparent transparent;
+        transform: rotate(0deg);
+        transition: transform $transition-time ease-in-out;
+
+        &--open {
+            transform: rotate(180deg);
+        }
+    }
+
+    &__options {
+        position: absolute;
+        top: 110%;
+        left: 0;
+        width: 100%;
+        background-color: var(--component-background-color);
+        box-shadow: 0px 0px 20px var(--shadow-color);
+        border-radius: $border-radius-small;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        max-height: 0;
+        transition: opacity $transition-time ease-in-out, visibility $transition-time ease-in-out, max-height $transition-time ease-in-out;
+        z-index: 5;
+
+        &--visible {
+            opacity: 1;
+            visibility: visible;
+            max-height: 24rem;
+        }
+    }
+
+    & button {
+        // display: block;
+        width: 100%;
+        padding: 0.5rem;
+        background-color: transparent;
+        color: var(--primary-text-color);
+        font-size: 0.875rem;
+        transition: all $transition-time ease-in-out;
+        text-align: left;
+
+        &:hover {
+            background-color: var(--main-background-color);
+            cursor: pointer;
+        }
+    }
+}

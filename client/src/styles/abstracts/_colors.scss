@@ -1,0 +1,29 @@
+:root {
+    &, &.dark {
+        --main-background-color: hsl(0, 0%, 10%);
+        --component-background-color: hsl(0, 0%, 4%);
+        --component-hover-background-color: hsl(0, 0%, 6%);
+        --element-background-color: hsl(0, 0%, 7%);
+        --mobile-menu-background-color: hsl(0, 0%, 10%);
+        --primary-text-color: hsl(0, 0%, 95%);
+        --secondary-text-color: hsl(0, 0%, 75%);
+    }
+
+    &.light {
+        --main-background-color: hsl(0, 0%, 90%);
+        --component-background-color: hsl(0, 0%, 98%);
+        --component-hover-background-color: hsl(0, 0%, 95%);
+        --element-background-color: hsl(0, 0%, 93%);
+        --mobile-menu-background-color: hsl(0, 0%, 95%);
+        --primary-text-color: hsl(0, 0%, 5%);
+        --secondary-text-color: hsl(0, 0%, 30%);
+    }
+
+    --mask-color: hsla(0, 0%, 0%, 0.6);
+    --shadow-color: hsla(0, 0%, 0%, 0.35);
+    --component-background-dark-color: hsl(0, 0%, 6%);
+    --button-background-color: hsl(211, 95%, 42%);
+    --button-hover-background-color: hsl(211, 95%, 53%);
+    --button-text-color: hsl(0, 0%, 97%);
+    --error-color: hsl(0, 79%, 49%);
+}

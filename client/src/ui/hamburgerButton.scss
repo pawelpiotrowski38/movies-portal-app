@@ -1,0 +1,22 @@
+@use '../styles/abstracts/variables' as *;
+
+.hamburger-button {
+    display: block;
+
+    &__bar {
+        display: block;
+        width: 1.5625rem;
+        height: 0.1875rem;
+        border-radius: $border-radius-medium;
+        background-color: var(--primary-text-color);
+        transition: all $transition-time ease-in-out;
+
+        &:not(:last-child) {
+            margin-bottom: 0.25rem;
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}

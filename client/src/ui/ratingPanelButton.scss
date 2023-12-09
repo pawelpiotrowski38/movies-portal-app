@@ -1,0 +1,17 @@
+.rating-panel-button {
+    flex: 1 0 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.625rem;
+    height: 1.625rem;
+
+    & > svg {
+        fill: var(--button-background-color);
+        stroke: var(--button-background-color);
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}

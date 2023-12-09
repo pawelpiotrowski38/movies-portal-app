@@ -1,0 +1,50 @@
+@use '../styles/abstracts/variables' as *;
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+
+    &__label {
+        margin-bottom: 0.25rem;
+        font-size: 0.9375rem;
+        font-weight: 500;
+    }
+
+    &__input {
+        width: 100%;
+        margin-bottom: 0.0625rem;
+        padding: 0.25rem 0.625rem;
+        border: 0.125rem solid var(--element-background-color);
+        border-radius: $border-radius-medium;
+        background-color: var(--element-background-color);
+        color: var(--primary-text-color);
+        font-size: 0.875rem;
+        transition: all $transition-time ease-in-out;
+
+        &--error {
+            border-color: var(--error-color);
+        }
+
+        &:focus {
+            border-color: var(--button-background-color);
+        }
+
+        &::placeholder {
+            color: var(--secondary-text-color);
+            opacity: 1;
+        }
+
+        &::-ms-input-placeholder {
+            color: var(--secondary-text-color);
+        }
+    }
+
+    &__error {
+        min-height: 1.3125rem;
+        margin: 0 0.75rem;
+        color: var(--error-color);
+        font-size: 0.875rem;
+    }
+}

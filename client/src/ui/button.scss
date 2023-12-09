@@ -1,0 +1,26 @@
+@use '../styles/abstracts/variables' as *;
+
+.button {
+    padding: 0.375rem 1rem;
+    border-radius: $border-radius-medium;
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
+    font-weight: 500;
+    transition: background-color $transition-time ease-in-out;
+
+    // &:hover {
+    //     background-color: var(--button-hover-background-color);
+    //     cursor: pointer;
+    // }
+
+    &:active:not([disabled]) {
+        scale: 0.98;
+    }
+}
+
+@media (hover: hover) {
+    .button:hover:not([disabled]) {
+        background-color: var(--button-hover-background-color);
+        cursor: pointer;
+    }
+}

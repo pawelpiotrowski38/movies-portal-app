@@ -1,0 +1,19 @@
+.rating-panel {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    &__ratings-container {
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 0.375rem;
+    }
+
+    &__rating-container {
+        flex: 1 0 20%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

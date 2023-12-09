@@ -1,0 +1,12 @@
+@use '../styles/abstracts/mixins' as *;
+
+.logo {
+    width: 1.875rem;
+    min-width: 1.875rem;
+}
+
+@include breakpoint-sm {
+    .logo {
+        width: 11.125rem;
+    }
+}

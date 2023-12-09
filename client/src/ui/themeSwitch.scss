@@ -1,0 +1,16 @@
+.theme-switch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    margin-right: 1rem;
+
+    & svg {
+        stroke: var(--primary-text-color);
+        fill: var(--primary-text-color);
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}

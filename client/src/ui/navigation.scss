@@ -1,0 +1,34 @@
+@use '../styles/abstracts/variables' as *;
+
+.navigation {
+    position: absolute;
+    top: 0;
+    right: -15rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 15rem;
+    min-height: 100vh;
+    padding: 0.625rem 1rem;
+    background-color: var(--mobile-menu-background-color);
+    z-index: 10;
+    transition: all $transition-time ease-in-out;
+    visibility: hidden;
+
+    &--visible {
+        right: 0;
+        visibility: visible;
+    }
+
+    &__close-button-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    &__list {
+        margin-bottom: 2rem;
+    }
+}

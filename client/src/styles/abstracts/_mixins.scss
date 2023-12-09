@@ -1,0 +1,43 @@
+@use './breakpoints' as *;
+
+// small devices
+@mixin breakpoint-sm {
+    @media (min-width: #{$screen-sm-min}) {
+        @content;
+    }
+}
+ 
+// medium devices
+@mixin breakpoint-md {
+    @media (min-width: #{$screen-md-min}) {
+        @content;
+    }
+}
+ 
+// large devices
+@mixin breakpoint-lg {
+    @media (min-width: #{$screen-lg-min}) {
+        @content;
+    }
+}
+ 
+// extra large devices
+@mixin breakpoint-xl {
+    @media (min-width: #{$screen-xl-min}) {
+        @content;
+    }
+}
+
+// extra extra large devices
+@mixin breakpoint-xxl {
+    @media (min-width: #{$screen-xxl-min}) {
+        @content;
+    }
+}
+
+ // custom devices
+@mixin breakpoint-custom($screenSize) {
+    @media (min-width: #{$screenSize}em) {
+        @content;
+    }
+}

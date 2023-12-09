@@ -1,0 +1,31 @@
+@use '../../styles/abstracts/variables' as *;
+
+.movie-card-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0.4125rem;
+    background-color: var(--component-background-color);
+    color: var(--primary-text-color);
+    border: 0.125rem solid var(--button-background-color);
+    border-top-right-radius: $border-radius-medium;
+    border-top-left-radius: $border-radius-medium;
+
+    &__close-button-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 1.25rem;
+    }
+
+    &__ratings-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        & >:first-child {
+            margin-bottom: 1rem;
+        }
+    }
+}

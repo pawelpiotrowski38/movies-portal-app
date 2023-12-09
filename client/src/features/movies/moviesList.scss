@@ -1,0 +1,38 @@
+@use '../../styles/abstracts/mixins' as *;
+
+.movies-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    width: 100%;
+}
+
+@include breakpoint-custom(28) {
+    .movies-list {
+        gap: 1.25rem;
+    }
+}
+
+@include breakpoint-sm {
+    .movies-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@include breakpoint-md {
+    .movies-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@include breakpoint-lg {
+    .movies-list {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@include breakpoint-xl {
+    .movies-list {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
