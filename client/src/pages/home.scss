@@ -16,11 +16,26 @@
         max-width: 90em;
     }
 
-    &__filters {
+    &__sort {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 100%;
         margin-bottom: 0.875rem;
+    }
+
+    &__filters {
+        overflow: hidden;
+        visibility: hidden;
+        max-height: 0;
+        transition: all $transition-time*2 ease-in-out;
+        opacity: 0;
+        z-index: 1;
+
+        &--visible {
+            visibility: visible;
+            opacity: 1;
+            max-height: 100rem;
+        }
     }
 }
