@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-export function useSessionStorageState(initialState, key) {
+export function useSessionStorageState(urlState, initialState, key) {
     const [value, setValue] = useState(function() {
-        const storedValue = sessionStorage.getItem(key);
-        return storedValue ? JSON.parse(storedValue) : initialState;
+        const storedValue = urlState.length > 0 ? urlState : JSON.parse(sessionStorage.getItem(key));
+        return storedValue ? storedValue : initialState;
     });
 
     useEffect(function() {
