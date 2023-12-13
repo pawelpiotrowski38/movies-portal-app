@@ -177,7 +177,6 @@ export default function Home() {
                     <Filters
                         filters={filters}
                         onHandleResetFilters={handleResetFilters}
-                        visible={showFilters}
                     />
                 </div>
                 {isLoading ? (
