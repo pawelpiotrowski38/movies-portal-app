@@ -1,0 +1,14 @@
+@use '../styles/abstracts/variables' as *;
+
+.arrow-button {
+    color: var(--primary-text-color);
+    transition: all $transition-time ease-in-out;
+
+    &--open {
+        transform: rotate(180deg);
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}
