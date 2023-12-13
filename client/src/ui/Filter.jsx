@@ -1,57 +1,37 @@
 import { useState } from 'react';
+import ArrowButton from './ArrowButton';
 import './filter.scss';
 
-const Filter = ({ name, values, texts, selected, numberToDisplay, handleSelectionFunction }) => {
-    const [showAllOptions, setShowAllOptions] = useState(false);
+export default function Filter({ name, values, texts, selected, handleSelectionFunction }) {
+    const [showOptions, setShowOptions] = useState(false);
 
-    const popularOptions = values.slice(0, numberToDisplay);
-    const popularOptionsTexts = texts.slice(0, numberToDisplay);
-    const otherOptions = values;//.slice().sort();
-    const otherOptionsTexts = texts;//.slice().sort();
-
-    const isSelected = (value) => {
+    const isSelected = function(value) {
         return selected.includes(value);
     };
 
-    const handleShowMoreOptions = () => {
-        setShowAllOptions(!showAllOptions);
+    const handleShowOptions = function() {
+        setShowOptions(!showOptions);
     }
 
     return (
         <div className='filter'>
-            <span className='filter__name'>
-                {name}
-            </span>
-            <div className='filter__buttons'>
-                {showAllOptions ? (
-                    otherOptions.map((value, index) => (
-                        <div key={index} className='filter__button-container'>
-                            <button onClick={() => handleSelectionFunction(value)} className={`filter__button ${isSelected(value) ? 'filter__button--selected' : ''}`}>
-                                {otherOptionsTexts[index]}
-                            </button>
-                        </div>
-                    ))
-                ) : (
-                    popularOptions.map((value, index) => (
-                        // <div key={index} className='filter__button-container'>
-                            <button key={index} onClick={() => handleSelectionFunction(value)} className={`filter__button ${isSelected(value) ? 'filter__button--selected' : ''}`}>
-                                {popularOptionsTexts[index]}
-                            </button>
-                        // </div>
-                    ))
-                    
-                )}
-                {values.length > numberToDisplay && (
-                    <div className='filter__button-container'>
-                        <button className='filter__button filter__button-show-more' onClick={handleShowMoreOptions}>
-                            {showAllOptions ? 'Show less' : 'Show more'}
-                        </button>
-                    </div>
-                )}
-                <div className='filter__invisible-item'></div>
+            <div className='filter__name-container' onClick={handleShowOptions}>
+                <span
+                    className='filter__name'
+                >
+                    {name}
+                </span>
+                <ArrowButton
+                    isOpen={showOptions}
+                />
+            </div>
+            <div className={`filter__buttons ${showOptions ? 'filter__buttons--visible' : ''}`} >
+                {values.map((value, index) => (
+                    <button key={value} onClick={() => handleSelectionFunction(value)} className={`filter__button ${isSelected(value) ? 'filter__button--selected' : ''}`}>
+                        {texts[index]}
+                    </button>
+                ))}
             </div>
         </div>
     );
 };
-
-export default Filter;
