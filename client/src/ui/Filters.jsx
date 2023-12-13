@@ -2,7 +2,7 @@ import Filter from "./Filter";
 import Button from "./Button";
 import './filters.scss';
 
-const Filters = ({ filters, onHandleChangeFilters, onHandleResetFilters }) => {
+export default function Filters({ filters, onHandleResetFilters }) {
     return (
         <div className='filters'>
             {filters.map((filter) => (
@@ -24,16 +24,7 @@ const Filters = ({ filters, onHandleChangeFilters, onHandleResetFilters }) => {
                 >
                     Reset Filters
                 </Button>
-                <Button
-                    width={'100%'}
-                    padding={'0.3125rem'}
-                    onClick={onHandleChangeFilters}
-                >
-                    Set filters
-                </Button>
             </div>
         </div>
     );
 }
-
-export default Filters;
