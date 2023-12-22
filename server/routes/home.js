@@ -5,8 +5,8 @@ const router = Router();
 
 router.get('/', async (req, res) => {
     const sortOption = req.query.sortOption || 'title_asc';
-    const genresFilter = req.query.genresFilter || [];
-    const countriesFilter = req.query.countriesFilter || [];
+    const genresFilter = req.query.filters?.genresFilter || [];
+    const countriesFilter = req.query.filters?.countriesFilter || [];
     const yearsFilter = req.query.yearsFilter || [];
 
     let connection = null;
@@ -14,7 +14,39 @@ router.get('/', async (req, res) => {
     try {
         connection = await pool.connect();
 
-        let query = 'SELECT * FROM movies';
+        const values = [];
+
+        let query = `
+            SELECT m.movie_id, m.title, m.number_of_ratings, m.sum_of_ratings,
+            STRING_AGG(DISTINCT g.name, ', ') AS genres_names,
+            STRING_AGG(DISTINCT c.name, ', ') AS countries_names
+            FROM movies m
+            JOIN movies_genres mg ON m.movie_id = mg.movie_id
+            JOIN genres g ON mg.genre_id = g.genre_id
+            JOIN movies_countries mc ON m.movie_id = mc.movie_id
+            JOIN countries c ON mc.country_id = c.country_id
+            WHERE 1=1
+        `;
+
+        query += ' GROUP BY m.movie_id, m.title, m.release_date, m.description, m.number_of_ratings, m.sum_of_ratings';
+
+        if (genresFilter.length > 0 && countriesFilter.length > 0) {
+            query += `
+                HAVING SUM(CASE WHEN g.name = ANY($1) THEN 1 ELSE 0 END) > 0
+			    AND SUM(CASE WHEN c.name = ANY($2) THEN 1 ELSE 0 END) > 0
+            `
+            values.push(genresFilter);
+            values.push(countriesFilter);
+        } else {
+            if (genresFilter.length > 0) {
+                query += ' HAVING SUM(CASE WHEN g.name = ANY($1) THEN 1 ELSE 0 END) > 0';
+                values.push(genresFilter);
+            }
+            if (countriesFilter.length > 0) {
+                query += ' HAVING SUM(CASE WHEN c.name = ANY($1) THEN 1 ELSE 0 END) > 0';
+                values.push(countriesFilter);
+            }
+        }
 
         switch (sortOption) {
             case 'title_asc':
@@ -45,7 +77,7 @@ router.get('/', async (req, res) => {
                 query += ' ORDER BY title ASC';
         }
 
-        const results = await connection.query(query);
+        const results = await connection.query(query, values);
 
         res.status(200).json({ results: results.rows });
     } catch (error) {
