@@ -18,6 +18,7 @@ router.get('/', async (req, res) => {
 
         let query = `
             SELECT m.movie_id, m.title, m.number_of_ratings, m.sum_of_ratings,
+            ROUND((m.sum_of_ratings::decimal/m.number_of_ratings), 1) AS average_rating,
             STRING_AGG(DISTINCT g.name, ', ') AS genres_names,
             STRING_AGG(DISTINCT c.name, ', ') AS countries_names
             FROM movies m
@@ -56,10 +57,10 @@ router.get('/', async (req, res) => {
                 query += ' ORDER BY title DESC';
                 break;
             case 'rating_asc':
-                query += ' ORDER BY (sum_of_ratings/number_of_ratings) ASC, title ASC';
+                query += ' ORDER BY average_rating ASC, title ASC';
                 break;
             case 'rating_desc':
-                query += ' ORDER BY (sum_of_ratings/number_of_ratings) DESC, title ASC';
+                query += ' ORDER BY average_rating DESC, title ASC';
                 break;
             case 'num_ratings_asc':
                 query += ' ORDER BY number_of_ratings ASC, title ASC';
