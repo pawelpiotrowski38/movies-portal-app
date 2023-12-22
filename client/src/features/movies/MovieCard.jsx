@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useClickOutside } from '../../hooks/useClickOutside';
+import { capitalizeFirstLetter, convertToUrlFormat } from '../../utils/formatText';
 import MovieCardPanel from './MovieCardPanel';
 import EllipsisButton from '../../ui/EllipsisButton';
 import Rating from '../../ui/Rating';
@@ -8,7 +9,8 @@ import './movieCard.scss';
 
 export default function MovieCard({ movie }) {
     const [isPanelVisible, setIsPanelVisible] = useState(false);
-    let movieTitle = movie.title.toLowerCase().replace(/\s+/g, '-');
+    const movieTitle = convertToUrlFormat(movie.title);
+    const movieGenres = capitalizeFirstLetter(movie.genres_names);
 
     const panelRef = useClickOutside(() => {
         setIsPanelVisible(false);
@@ -35,25 +37,22 @@ export default function MovieCard({ movie }) {
             </div>
             <div className='movie-card__title-container'>
                 <p className='movie-card__title'>{movie.title}</p>
-                <p className='movie-card__genres'>Drama, Action</p>
-                {/* <div className='movie-card-small-genres-container'>
-                    {genresList && (
-                        (genresList.length === 1 ? (
-                            <div className='movie-card-small-genre'>
-                                <p>{translationsGenres.genres[genresList[0]][language]}</p>
-                            </div>
+                <div className='movie-card__genres-container'>
+                    {movieGenres && (
+                        (movieGenres.length === 1 ? (
+                            <p className='movie-card__genre'>{movieGenres[0]}</p>
                         ) : (
-                            (genresList.map((genre, index) => (
-                                <div key={index} className='movie-card-small-genre'>
-                                    <p>{translationsGenres.genres[genre][language]}</p>
-                                    {index < genresList.length - 1 &&
-                                        <div className='movie-card-small-genre-separator'></div>
+                            (movieGenres.map((genre, index) => (
+                                <div key={genre} className='movie-card__genre-container'>
+                                    <p className='movie-card__genre'>{genre}</p>
+                                    {index < movieGenres.length - 1 &&
+                                        <span className='movie-card__separator'></span>
                                     }
                                 </div>
                             )))
                         ))
                     )}
-                </div> */}
+                </div>
             </div>
             <div className='movie-card__button'>
                 <EllipsisButton
@@ -61,7 +60,7 @@ export default function MovieCard({ movie }) {
                 />
             </div>
             <div className='movie-card__rating'>
-                <Rating rating={8.2} />
+                <Rating rating={movie.average_rating} />
             </div>
             
         </li>
