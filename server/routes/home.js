@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
     const sortOption = req.query.sortOption || 'title_asc';
     const genresFilter = req.query.filters?.genresFilter || [];
     const countriesFilter = req.query.filters?.countriesFilter || [];
-    const yearsFilter = req.query.yearsFilter || [];
+    const yearsFilter = req.query.filters?.yearsFilter || [];
 
     let connection = null;
 
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
         const values = [];
 
         let query = `
-            SELECT m.movie_id, m.title, m.number_of_ratings, m.sum_of_ratings,
+            SELECT m.movie_id, m.title, m.release_date, m.number_of_ratings, m.sum_of_ratings,
             ROUND((m.sum_of_ratings::decimal/m.number_of_ratings), 1) AS average_rating,
             STRING_AGG(DISTINCT g.name, ', ') AS genres_names,
             STRING_AGG(DISTINCT c.name, ', ') AS countries_names
@@ -29,22 +29,27 @@ router.get('/', async (req, res) => {
             WHERE 1=1
         `;
 
-        query += ' GROUP BY m.movie_id, m.title, m.release_date, m.description, m.number_of_ratings, m.sum_of_ratings';
+        if (yearsFilter.length > 0) {
+            query += ` AND EXTRACT(YEAR FROM m.release_date)::text = ANY($${values.length + 1})`;
+            values.push(yearsFilter);
+        }
+
+        query += ` GROUP BY m.movie_id, m.title, m.release_date, m.description, m.number_of_ratings, m.sum_of_ratings`;
 
         if (genresFilter.length > 0 && countriesFilter.length > 0) {
             query += `
-                HAVING SUM(CASE WHEN g.name = ANY($1) THEN 1 ELSE 0 END) > 0
-			    AND SUM(CASE WHEN c.name = ANY($2) THEN 1 ELSE 0 END) > 0
+                HAVING SUM(CASE WHEN g.name = ANY($${values.length + 1}) THEN 1 ELSE 0 END) > 0
+			    AND SUM(CASE WHEN c.name = ANY($${values.length + 2}) THEN 1 ELSE 0 END) > 0
             `
             values.push(genresFilter);
             values.push(countriesFilter);
         } else {
             if (genresFilter.length > 0) {
-                query += ' HAVING SUM(CASE WHEN g.name = ANY($1) THEN 1 ELSE 0 END) > 0';
+                query += ` HAVING SUM(CASE WHEN g.name = ANY($${values.length + 1}) THEN 1 ELSE 0 END) > 0`;
                 values.push(genresFilter);
             }
             if (countriesFilter.length > 0) {
-                query += ' HAVING SUM(CASE WHEN c.name = ANY($1) THEN 1 ELSE 0 END) > 0';
+                query += ` HAVING SUM(CASE WHEN c.name = ANY($${values.length + 1}) THEN 1 ELSE 0 END) > 0`;
                 values.push(countriesFilter);
             }
         }
