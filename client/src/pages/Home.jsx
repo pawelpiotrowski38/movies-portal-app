@@ -15,6 +15,10 @@ export default function Home() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [movies, setMovies] = useState([]);
+    const [allMoviesCount, setAllMoviesCount] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [page, setPage] = useState(1);
+
     const [sortOption, setSortOption] = useSessionStorageState(
         searchParams.get('sort') || '', 'title_asc', 'movies_sort_option'
     );
@@ -40,7 +44,6 @@ export default function Home() {
         initialYearsFilter, [], 'movies_selected_years'
     );
     const [showFilters, setShowFilters] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,18 +54,20 @@ export default function Home() {
                     countriesFilter,
                     yearsFilter,
                 },
+                offset: 0,
+                limit: 10,
             }
             try {
                 setIsLoading(true);
                 const response = await api.get('/', { params: queryParams });
                 setMovies(response.data.results);
+                setAllMoviesCount(response.data.count);
             } catch (err) {
                 console.error(err);
             } finally {
                 setIsLoading(false);
             }
         };
-
         fetchData();
     }, [sortOption, genresFilter, countriesFilter, yearsFilter]);
 
@@ -84,8 +89,32 @@ export default function Home() {
         setSearchParams(paramsToUpdate);
     }, [sortOption, genresFilter, countriesFilter, yearsFilter, setSearchParams]);
 
+    const handleShowMore = async function() {
+        const queryParams = {
+            sortOption: sortOption,
+            filters: {
+                genresFilter,
+                countriesFilter,
+                yearsFilter,
+            },
+            offset: `${page*10}`,
+            limit: 10,
+        }
+        try {
+            setIsLoading(true);
+            const response = await api.get('/', { params: queryParams });
+            setMovies((prevMovies) => [...prevMovies, ...response.data.results]);
+            setPage((prevPage) => prevPage + 1);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
     const handleSortOptionChange = function(e) {
         setSortOption(e.target.value);
+        resetPage();
     };
 
     const handleToggleFilters = function() {
@@ -100,6 +129,7 @@ export default function Home() {
             updatedGenres = [...genresFilter, genre];
         }
         setGenresFilter(updatedGenres);
+        resetPage();
     };
 
     const handleCountrySelection = (country) => {
@@ -110,6 +140,7 @@ export default function Home() {
             updatedCountries = [...countriesFilter, country];
         }
         setCountriesFilter(updatedCountries);
+        resetPage();
     };
 
     const handleYearSelection = (year) => {
@@ -120,12 +151,18 @@ export default function Home() {
             updatedYears = [...yearsFilter, year];
         }
         setYearsFilter(updatedYears);
+        resetPage();
     };
 
     const handleResetFilters = () => {
         setGenresFilter([]);
         setCountriesFilter([]);
         setYearsFilter([]);
+        resetPage();
+    };
+
+    const resetPage = function() {
+        setPage(1);
     };
 
     const filters = [
@@ -179,24 +216,34 @@ export default function Home() {
                         onHandleResetFilters={handleResetFilters}
                     />
                 </div>
-                {isLoading ? (
-                    <Message>
-                        <Spinner
-                            primaryColor={'praimry-text-color'}
-                            secondaryColor={'component-background-color'}
-                        />
-                    </Message>
+                {movies.length > 0 ? (
+                    <MoviesList movies={movies} />
                 ) : (
-                    (movies.length > 0 ? (
-                        <MoviesList movies={movies} />
-                    )
-                    : (
+                    (!isLoading && (
                         <Message>
-                            There are no movies...
+                            There are no movies matching the applied filters
                         </Message>
                     ))
-                    
                 )}
+                <div className='home__message'>
+                    {isLoading ? (
+                        <Message>
+                            <Spinner
+                                primaryColor={'praimry-text-color'}
+                                secondaryColor={'component-background-color'}
+                            />
+                        </Message>
+                    ) : (
+                        (movies.length < allMoviesCount && (
+                            <Button
+                                width={'100%'}
+                                onClick={handleShowMore}
+                            >
+                                Show more
+                            </Button>
+                        ))
+                    )}
+                </div>
             </div>
         </div>
     )

@@ -8,6 +8,8 @@ router.get('/', async (req, res) => {
     const genresFilter = req.query.filters?.genresFilter || [];
     const countriesFilter = req.query.filters?.countriesFilter || [];
     const yearsFilter = req.query.filters?.yearsFilter || [];
+    const offset = req.query.offset || 0;
+    const limit = req.query.limit || 10;
 
     let connection = null;
 
@@ -15,6 +17,17 @@ router.get('/', async (req, res) => {
         connection = await pool.connect();
 
         const values = [];
+        const countValues = [];
+
+        let countQuery = `
+            SELECT COUNT(DISTINCT m.movie_id) AS count
+            FROM movies m
+            JOIN movies_genres mg ON m.movie_id = mg.movie_id
+            JOIN genres g ON mg.genre_id = g.genre_id
+            JOIN movies_countries mc ON m.movie_id = mc.movie_id
+            JOIN countries c ON mc.country_id = c.country_id
+            WHERE 1=1
+        `;
 
         let query = `
             SELECT m.movie_id, m.title, m.release_date, m.number_of_ratings, m.sum_of_ratings,
@@ -31,7 +44,17 @@ router.get('/', async (req, res) => {
 
         if (yearsFilter.length > 0) {
             query += ` AND EXTRACT(YEAR FROM m.release_date)::text = ANY($${values.length + 1})`;
+            countQuery += ` AND EXTRACT(YEAR FROM m.release_date)::text = ANY($${values.length + 1})`;
             values.push(yearsFilter);
+            countValues.push(yearsFilter);
+        }
+        if (genresFilter.length > 0) {
+            countQuery += ` AND g.name = ANY($${values.length + 1})`;
+            countValues.push(genresFilter);
+        }
+        if (countriesFilter.length > 0) {
+            countQuery += ` AND c.name = ANY($${values.length + 1})`;
+            countValues.push(countriesFilter);
         }
 
         query += ` GROUP BY m.movie_id, m.title, m.release_date, m.description, m.number_of_ratings, m.sum_of_ratings`;
@@ -83,9 +106,17 @@ router.get('/', async (req, res) => {
                 query += ' ORDER BY title ASC';
         }
 
-        const results = await connection.query(query, values);
+        query += ` OFFSET $${values.length + 1} LIMIT $${values.length + 2}`;
+        values.push(offset);
+        values.push(limit);
 
-        res.status(200).json({ results: results.rows });
+        const moviesResults = await connection.query(query, values);
+        const countResults = await connection.query(countQuery, countValues);
+
+        res.status(200).json({
+            results: moviesResults.rows,
+            count: countResults.rows[0].count,
+        });
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ message: 'Internal server error', err: error });
