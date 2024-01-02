@@ -1,0 +1,6 @@
+@use '../styles/abstracts/variables' as *;
+
+.circle-separator {
+    display: block;
+    border-radius: $border-radius-50;
+}

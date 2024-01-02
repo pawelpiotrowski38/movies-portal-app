@@ -4,6 +4,7 @@ import { useClickOutside } from '../../hooks/useClickOutside';
 import { capitalizeFirstLetter, convertToUrlFormat } from '../../utils/formatText';
 import MovieCardPanel from './MovieCardPanel';
 import EllipsisButton from '../../ui/EllipsisButton';
+import CircleSeparator from '../../ui/CircleSeparator';
 import Rating from '../../ui/Rating';
 import './movieCard.scss';
 
@@ -46,7 +47,7 @@ export default function MovieCard({ movie }) {
                                 <div key={genre} className='movie-card__genre-container'>
                                     <p className='movie-card__genre'>{genre}</p>
                                     {index < movieGenres.length - 1 &&
-                                        <span className='movie-card__separator'></span>
+                                        <CircleSeparator size={0.25} margin={0.25} />
                                     }
                                 </div>
                             )))

@@ -1,5 +1,6 @@
 import Heading from "../../ui/Heading";
 import Rating from "../../ui/Rating";
+import CircleSeparator from "../../ui/CircleSeparator";
 import { capitalizeFirstLetter } from "../../utils/formatText";
 import './movieCardLarge.scss';
 
@@ -28,7 +29,7 @@ export default function MovieCardLarge({ movie }) {
                                     <div key={genre} className='movie-card-large__info-container'>
                                         <p className='movie-card-large__info'>{genre}</p>
                                         {index < movieGenres.length - 1 &&
-                                            <span className='movie-card-large__separator'></span>
+                                            <CircleSeparator size={0.375} />
                                         }
                                     </div>
                                 )))
@@ -36,7 +37,7 @@ export default function MovieCardLarge({ movie }) {
                         </div>
                         <div className='movie-card-large__info-container'>
                             <p className='movie-card-large__info'>{movie.release_date.slice(0, 4)}</p>
-                            <span className='movie-card-large__separator'></span>
+                            <CircleSeparator size={0.375} />
                             <p className='movie-card-large__info'>{`120 min`}</p>
                         </div>
                     </div>

@@ -34,15 +34,6 @@
         font-weight: 400;
     }
 
-    &__separator {
-        display: block;
-        width: 0.375rem;
-        height: 0.375rem;
-        margin: 0 0.5rem;
-        border-radius: $border-radius-50;
-        background-color: var(--primary-text-color);
-    }
-
     &__add-info-container {
         margin-top: 1rem;
     }
