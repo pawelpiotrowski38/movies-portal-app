@@ -1,9 +1,10 @@
 import './heading.scss';
 
-export default function Heading({ type, size, weight, children }) {
+export default function Heading({ type, size, weight, alignment, children }) {
     const styles = {
         fontSize: size,
         fontWeight: weight,
+        textAlign: alignment,
     }
 
     if (type === 'h2') {
@@ -33,4 +34,5 @@ Heading.defaultProps = {
     type: 'h1',
     size: '1.5rem',
     weight: '600',
+    alignment: 'center',
 };

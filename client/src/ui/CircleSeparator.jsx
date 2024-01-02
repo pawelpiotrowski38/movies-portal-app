@@ -19,5 +19,5 @@ export default function CircleSeparator({ size, margin, color }) {
 CircleSeparator.defaultProps = {
     size: 0.5,
     margin: 0.5,
-    color: 'primary-text-color',
+    color: 'secondary-text-color',
 }
