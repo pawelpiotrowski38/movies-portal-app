@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/api';
 import MovieCardLarge from '../features/movies/MovieCardLarge';
+import MovieAddInfo from '../features/movies/MovieAddInfo';
 import Message from '../ui/Message';
 import Spinner from '../ui/Spinner';
 import './movieDetails.scss';
@@ -38,7 +39,10 @@ export default function MovieDetails() {
                         />
                     </Message>
                 ) : (
-                    <MovieCardLarge movie={movie} />
+                    <>
+                        <MovieCardLarge movie={movie} />
+                        <MovieAddInfo movie={movie} />
+                    </>
                 )}
             </div>
         </div>
