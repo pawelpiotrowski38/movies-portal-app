@@ -26,3 +26,5 @@ export const moviesSortValues = [
 export const moviesSortTexts = [
     'Title (A-Z)', 'Title (Z-A)', 'Highest rating', 'Lowest rating', 'Newest', 'Oldest'
 ];
+
+export const movieKeywords = ['Intrigue', 'Enigma', 'Epic', 'Quirky', 'Suspense', 'Whimsical', 'Emotional', 'Pulse-pounding', 'Futuristic', 'Chilling'];
