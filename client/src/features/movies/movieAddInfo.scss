@@ -1,0 +1,43 @@
+@use '../../styles/abstracts/variables' as *;
+
+.movie-add-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem;
+    border-radius: $border-radius-medium;
+    background-color: var(--component-background-color);
+
+    &__heading-container {
+        margin-bottom: 0.625rem;
+    }
+
+    &__content-container >:not(:last-child) {
+        margin-bottom: 0.125rem;
+    }
+
+    &__content {
+        font-size: 1rem;
+    }
+
+    &__keywords-container {
+        margin-top: 0.5rem;
+    }
+
+    &__keywords {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+        margin-top: 0.25rem;
+    }
+    
+    &__keyword {
+        padding: 0.25rem 1rem;
+        border-radius: $border-radius-small;
+        background-color: var(--element-background-color);
+        color: var(--primary-text-color);   
+    }
+}
