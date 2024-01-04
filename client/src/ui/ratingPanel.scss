@@ -1,19 +1,22 @@
 .rating-panel {
     flex: 1;
     display: flex;
-    justify-content: center;
     align-items: flex-start;
 
     &__ratings-container {
+        flex: 1;
         display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
         flex-wrap: wrap;
         row-gap: 0.375rem;
     }
 
-    &__rating-container {
-        flex: 1 0 20%;
+    &__ratings {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-wrap: wrap;
+        row-gap: 0.375rem;
+        margin-top: 1rem;
     }
 }
