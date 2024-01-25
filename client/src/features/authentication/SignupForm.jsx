@@ -60,7 +60,11 @@ export default function SignupForm() {
     }
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form
+            maxWidth={'40em'}
+            padding={'1.875rem'}
+            onSubmit={handleSubmit}
+        >
             <Heading size='1.375rem'>
                 Create your new account
             </Heading>

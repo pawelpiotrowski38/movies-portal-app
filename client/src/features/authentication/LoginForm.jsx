@@ -61,7 +61,11 @@ export default function LoginForm() {
     }
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form
+            maxWidth={'40em'}
+            padding={'1.875rem'}
+            onSubmit={handleSubmit}
+        >
             <Heading size='1.375rem'>
                 Log in to your account
             </Heading>

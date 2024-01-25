@@ -28,7 +28,11 @@ export default function ForgotPasswordForm() {
     }
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form
+            maxWidth={'40em'}
+            padding={'1.875rem'}
+            onSubmit={handleSubmit}
+        >
             <Heading size='1.375rem'>
                 Send reset password link to your email
             </Heading>
