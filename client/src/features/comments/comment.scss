@@ -1,0 +1,37 @@
+@use '../../styles/abstracts/variables' as *;
+
+.comment {
+    padding: 0.6875rem;
+    background-color: var(--element-background-color);
+    border-radius: $border-radius-medium;
+
+    &__header {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    &__avatar {
+        width: 2.375rem;
+        height: 2.375rem;
+        margin-right: 0.75rem;
+        border-radius: $border-radius-50;
+        background-color: var(--primary-text-color);
+    }
+
+    &__author {
+        color: var(--button-background-color);
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    &__time {
+        color: var(--secondary-text-color);
+        font-size: 0.875rem;
+    }
+
+    &__content {
+        font-size: 1rem;
+    }
+}

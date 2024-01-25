@@ -53,3 +53,11 @@ export function validateConfirmPassword(password, confirmPassword) {
 
     return '';
 }
+
+export function validateComment(comment) {
+    if (comment.length === 0) {
+        return 'Comment field can\'t be empty';
+    }
+
+    return ''
+}

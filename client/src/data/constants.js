@@ -28,3 +28,11 @@ export const moviesSortTexts = [
 ];
 
 export const movieKeywords = ['Intrigue', 'Enigma', 'Epic', 'Quirky', 'Suspense', 'Whimsical', 'Emotional', 'Pulse-pounding', 'Futuristic', 'Chilling'];
+
+export const commentsSortValues = [
+    'new', 'old', 'best'
+];
+
+export const commentsSortTexts = [
+    'Latest', 'Oldest', 'Best'
+];
