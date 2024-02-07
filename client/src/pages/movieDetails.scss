@@ -21,7 +21,7 @@
         }
     }
 
-    &__subcontainer {
+    &__add-container {
         display: flex;
         flex-direction: column;
 
@@ -29,12 +29,27 @@
             margin-bottom: 0.75rem;
         }
     }
+
+    &__sticky-container {
+        display: flex;
+        flex-direction: column;
+
+        & >:not(:last-child) {
+            margin-bottom: 0.75rem;
+        }
+    }
+
+    &__rating-panel-container {
+        padding: 1rem;
+        border-radius: $border-radius-medium;
+        background-color: var(--component-background-color);
+    }
 }
 
 @include breakpoint-lg {
     .movie-details {
     
-        &__subcontainer {
+        &__add-container {
             position: relative;
             flex-direction: row-reverse;
             align-items: flex-start;

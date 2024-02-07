@@ -4,6 +4,7 @@ import api from '../api/api';
 import MovieCardLarge from '../features/movies/MovieCardLarge';
 import MovieAddInfo from '../features/movies/MovieAddInfo';
 import Comments from '../features/comments/Comments';
+import RatingPanel from '../ui/RatingPanel';
 import Message from '../ui/Message';
 import Spinner from '../ui/Spinner';
 import './movieDetails.scss';
@@ -92,15 +93,23 @@ export default function MovieDetails() {
                 {isLoading ? (
                     <Message>
                         <Spinner 
-                            primaryColor={'praimry-text-color'}
+                            primaryColor={'primary-text-color'}
                             secondaryColor={'component-background-color'}
                         />
                     </Message>
                 ) : (
                     <>
                         <MovieCardLarge movie={movie} />
-                        <div className='movie-details__subcontainer'>
-                            <MovieAddInfo movie={movie} />
+                        <div className='movie-details__add-container'>
+                            <div className='movie-details__sticky-container'>
+                                <div className='movie-details__rating-panel-container'>
+                                    <RatingPanel
+                                        userRating={movie.rating}
+                                        userWatchlist={movie.watchlist}
+                                    />
+                                </div>
+                                <MovieAddInfo movie={movie} />
+                            </div>
                             <Comments comments={comments} />
                         </div>
                     </>
