@@ -15,14 +15,18 @@ router.get('/details/:movieId', async (req, res) => {
             SELECT DISTINCT m.*,
             ROUND((m.sum_of_ratings::decimal/m.number_of_ratings), 1) AS average_rating,
             STRING_AGG(DISTINCT g.name, ', ') AS genres_names,
-            STRING_AGG(DISTINCT c.name, ', ') AS countries_names
+            STRING_AGG(DISTINCT c.name, ', ') AS countries_names,
+            r.rating,
+            w.watchlist_id AS watchlist
             FROM movies m
             JOIN movies_genres mg ON m.movie_id = mg.movie_id
             JOIN genres g ON mg.genre_id = g.genre_id
             JOIN movies_countries mc ON m.movie_id = mc.movie_id
             JOIN countries c ON mc.country_id = c.country_id
+            LEFT JOIN ratings r ON m.movie_id = r.movie_id AND r.user_id = 1
+            LEFT JOIN watchlist w ON m.movie_id = w.movie_id AND w.user_id = 1
             WHERE m.movie_id = $1
-            GROUP BY m.movie_id`
+            GROUP BY m.movie_id, r.rating, w.watchlist_id`
 
         const results = await connection.query(query, [movieId]);
 
