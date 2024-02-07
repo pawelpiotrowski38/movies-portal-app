@@ -4,12 +4,17 @@ import RatingPanelButton from './RatingPanelButton';
 import Button from './Button';
 import './ratingPanel.scss';
 
-export default function RatingPanel() {
-    const [rating, setRating] = useState(0);
+export default function RatingPanel({ userRating, userWatchlist }) {
+    const [rating, setRating] = useState(userRating);
     const [tempRating, setTempRating] = useState(0);
+    const [watchlist, setWatchlist] = useState(userWatchlist);
 
     const handleRating = function(rating) {
         setRating(rating);
+    }
+
+    const handleWatchlist = function() {
+        setWatchlist((watchlist => !watchlist));
     }
 
     return (
@@ -45,8 +50,9 @@ export default function RatingPanel() {
                 <Button
                     width={'100%'}
                     fontSize={'0.875rem'}
+                    onClick={handleWatchlist}
                 >
-                    Add to watchlist
+                    {watchlist ? `Remove from watchlist` : `Add to watchlist`}
                 </Button>
             </div>
         </div>

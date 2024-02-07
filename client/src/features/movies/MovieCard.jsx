@@ -32,6 +32,8 @@ export default function MovieCard({ movie }) {
                     className={`movie-card__panel ${isPanelVisible ? 'movie-card__panel--visible' : ''}`}
                 >
                     <MovieCardPanel
+                        userRating={movie.rating}
+                        userWatchlist={movie.watchlist}
                         onSetIsPanelVisible={setIsPanelVisible}
                     />
                 </div>
