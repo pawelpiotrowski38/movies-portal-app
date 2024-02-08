@@ -4,6 +4,8 @@ const { json, urlencoded } = pkg;
 
 import homeRouter from './routes/home.js';
 import movieRouter from './routes/movie.js';
+import ratingsRouter from './routes/ratings.js';
+import watchlistRouter from './routes/watchlist.js';
 import authenticationRouter from './routes/authentication.js';
 
 const app = express();
@@ -29,6 +31,8 @@ app.use((req, res, next) => {
 
 app.use('/', homeRouter);
 app.use('/movie', movieRouter);
+app.use('/ratings', ratingsRouter);
+app.use('/watchlist', watchlistRouter);
 app.use('/authentication', authenticationRouter);
 
 export default app;
