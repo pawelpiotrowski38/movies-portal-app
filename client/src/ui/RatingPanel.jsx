@@ -1,20 +1,50 @@
 import { useState } from 'react';
+import api from '../api/api';
 import Heading from './Heading';
 import RatingPanelButton from './RatingPanelButton';
 import Button from './Button';
 import './ratingPanel.scss';
 
-export default function RatingPanel({ userRating, userWatchlist }) {
+export default function RatingPanel({ movieId, userRating, userWatchlist }) {
     const [rating, setRating] = useState(userRating);
     const [tempRating, setTempRating] = useState(0);
     const [watchlist, setWatchlist] = useState(userWatchlist);
 
-    const handleRating = function(rating) {
-        setRating(rating);
+    const handleRating = async function(rating) {
+        try {
+            const response = await api.post('/ratings/add', {
+                movieId: movieId,
+                rating: rating,
+            });
+            setRating(rating);
+            
+            console.log(response.data.message);
+        } catch (error) {
+            console.log(error.response);
+        }
     }
 
-    const handleWatchlist = function() {
-        setWatchlist((watchlist => !watchlist));
+    const handleWatchlist = async function(operationType) {
+        try {
+            if (operationType === 'add') {
+                const response = await api.post(`/watchlist/add`, {
+                    movieId: movieId,
+                    rating: rating,
+                });
+
+                console.log(response.data.message);
+            } else if (operationType === 'delete') {
+                const response = await api.delete(`/watchlist/delete/${movieId}`);
+
+                console.log(response.data.message);
+            } else {
+                return;
+            }
+
+            setWatchlist((watchlist => !watchlist));
+        } catch (error) {
+            console.log(error.response);
+        }
     }
 
     return (
@@ -50,7 +80,7 @@ export default function RatingPanel({ userRating, userWatchlist }) {
                 <Button
                     width={'100%'}
                     fontSize={'0.875rem'}
-                    onClick={handleWatchlist}
+                    onClick={() => handleWatchlist(watchlist ? 'delete' : 'add')}
                 >
                     {watchlist ? `Remove from watchlist` : `Add to watchlist`}
                 </Button>
