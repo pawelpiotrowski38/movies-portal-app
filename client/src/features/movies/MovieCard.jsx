@@ -6,6 +6,8 @@ import MovieCardPanel from './MovieCardPanel';
 import EllipsisButton from '../../ui/EllipsisButton';
 import CircleSeparator from '../../ui/CircleSeparator';
 import Rating from '../../ui/Rating';
+import CloseButton from '../../ui/CloseButton';
+import RatingPanel from '../../ui/RatingPanel';
 import './movieCard.scss';
 
 export default function MovieCard({ movie }) {
@@ -31,11 +33,18 @@ export default function MovieCard({ movie }) {
                     ref={panelRef}
                     className={`movie-card__panel ${isPanelVisible ? 'movie-card__panel--visible' : ''}`}
                 >
-                    <MovieCardPanel
-                        userRating={movie.rating}
-                        userWatchlist={movie.watchlist}
-                        onSetIsPanelVisible={setIsPanelVisible}
-                    />
+                    <MovieCardPanel>
+                        <div className='movie-card__panel-close-button-container'>
+                            <CloseButton
+                                onCloseHandler={() => setIsPanelVisible(false)}
+                            />
+                        </div>
+                        <RatingPanel
+                            movieId={movie.movie_id}
+                            userRating={movie.rating}
+                            userWatchlist={movie.watchlist}
+                        />
+                    </MovieCardPanel>
                 </div>
             </div>
             <div className='movie-card__title-container'>

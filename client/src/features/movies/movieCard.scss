@@ -38,6 +38,13 @@
         transition: all $transition-time ease-in-out;
         opacity: 0;
         z-index: 1;
+
+        &-close-button-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
     
         &--visible {
             visibility: visible;
