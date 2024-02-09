@@ -6,6 +6,7 @@ import homeRouter from './routes/home.js';
 import movieRouter from './routes/movie.js';
 import ratingsRouter from './routes/ratings.js';
 import watchlistRouter from './routes/watchlist.js';
+import commentsRouter from './routes/comments.js';
 import authenticationRouter from './routes/authentication.js';
 
 const app = express();
@@ -33,6 +34,7 @@ app.use('/', homeRouter);
 app.use('/movie', movieRouter);
 app.use('/ratings', ratingsRouter);
 app.use('/watchlist', watchlistRouter);
+app.use('/comments', commentsRouter);
 app.use('/authentication', authenticationRouter);
 
 export default app;
