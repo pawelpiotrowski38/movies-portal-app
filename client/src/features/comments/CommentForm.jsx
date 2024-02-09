@@ -5,8 +5,9 @@ import FormItem from "../../ui/FormItem";
 import Button from "../../ui/Button";
 import Spinner from "../../ui/Spinner";
 import Heading from "../../ui/Heading";
+import api from "../../api/api";
 
-export default function CommentForm({ numberOfComments }) {
+export default function CommentForm({ movieId, onSetComments, numberOfComments, onSetAllCommentsCount }) {
     const [comment, setComment] = useState('');
     const [commentError, setCommentError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -19,12 +20,28 @@ export default function CommentForm({ numberOfComments }) {
         return !commentMessage;
     }
 
-    const handleSubmit = function(e) {
+    const handleSubmit = async function(e) {
         e.preventDefault();
         
         setIsLoading(true);
-        validateForm();
-        setIsLoading(false);
+        if (validateForm()) {
+            try {
+                const response = await api.post('/comments/add', {
+                    movieId: movieId,
+                    content: comment,
+                });
+                const newComment = response.data.newComment;
+                onSetComments((prevComments) => [newComment, ...prevComments])
+                onSetAllCommentsCount((prevCount) => parseInt(prevCount) + 1);
+                setComment('');
+            } catch (error) {
+                console.log(error.response);
+            } finally {
+                setIsLoading(false);
+            }
+        } else {
+            setIsLoading(false);
+        }
     }
 
     return (
