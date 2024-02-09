@@ -7,10 +7,10 @@ export default function Comment({ comment }) {
                 <div className='comment__avatar'></div>
                 <div className='comment__info'>
                     <p className='comment__author'>
-                        {comment.author}
+                        {comment.username}
                     </p>
                     <p className='comment__time'>
-                        {comment.time}
+                        {new Date(comment.created_at).toLocaleString()}
                     </p>
                 </div>
             </div>

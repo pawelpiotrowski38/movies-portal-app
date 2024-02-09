@@ -9,63 +9,6 @@ import Message from '../ui/Message';
 import Spinner from '../ui/Spinner';
 import './movieDetails.scss';
 
-const comments = [
-    {
-        id: 1,
-        author: 'user1',
-        time: '2 days ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-        id: 2,
-        author: 'user2',
-        time: '5 days ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-        id: 3,
-        author: 'user2',
-        time: '5 days ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-        id: 4,
-        author: 'user2',
-        time: '5 days ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-        id: 5,
-        author: 'user2',
-        time: '5 days ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-        id: 6,
-        author: 'user2',
-        time: '5 days ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-        id: 7,
-        author: 'user2',
-        time: '5 days ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-        id: 8,
-        author: 'user2',
-        time: '5 days ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-        id: 9,
-        author: 'user2',
-        time: '5 days ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-]
-
 export default function MovieDetails() {
     const [movie, setMovie] = useState({});
     const [isLoading, setIsLoading] = useState(true);
@@ -110,7 +53,7 @@ export default function MovieDetails() {
                                 </div>
                                 <MovieAddInfo movie={movie} />
                             </div>
-                            <Comments comments={comments} />
+                            <Comments movieId={movieId} />
                         </div>
                     </>
                 )}
