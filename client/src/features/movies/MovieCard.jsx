@@ -43,6 +43,7 @@ export default function MovieCard({ movie }) {
                             movieId={movie.movie_id}
                             userRating={movie.rating}
                             userWatchlist={movie.watchlist}
+                            isThumbnail={true}
                         />
                     </MovieCardPanel>
                 </div>

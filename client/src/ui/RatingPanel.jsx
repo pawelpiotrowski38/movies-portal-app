@@ -5,7 +5,7 @@ import RatingPanelButton from './RatingPanelButton';
 import Button from './Button';
 import './ratingPanel.scss';
 
-export default function RatingPanel({ movieId, userRating, userWatchlist }) {
+export default function RatingPanel({ movieId, userRating, userWatchlist, isThumbnail }) {
     const [rating, setRating] = useState(userRating);
     const [tempRating, setTempRating] = useState(0);
     const [watchlist, setWatchlist] = useState(userWatchlist);
@@ -53,8 +53,8 @@ export default function RatingPanel({ movieId, userRating, userWatchlist }) {
                 <div className='rating-panel__user-rating-container'>
                     <Heading
                         type={'h2'}
-                        size={'1rem'}
-                        weight={500}
+                        size={isThumbnail ? '1rem' : '1.25rem'}
+                        weight={isThumbnail ? 500 : 600}
                     >
                         {rating || tempRating ? (
                             `Your rating: ${tempRating ? tempRating : rating}`
@@ -79,7 +79,7 @@ export default function RatingPanel({ movieId, userRating, userWatchlist }) {
             <div className='rating-panel__buttons-container'>
                 <Button
                     width={'100%'}
-                    fontSize={'0.875rem'}
+                    fontSize={isThumbnail ? '0.875rem' : '0.9375rem'}
                     onClick={() => handleWatchlist(watchlist ? 'delete' : 'add')}
                 >
                     {watchlist ? `Remove from watchlist` : `Add to watchlist`}

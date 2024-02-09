@@ -3,11 +3,10 @@ import { validateComment } from "../../utils/validateFormFields";
 import Form from "../../ui/Form";
 import FormItem from "../../ui/FormItem";
 import Button from "../../ui/Button";
-// import Heading from "../../ui/Heading";
 import Spinner from "../../ui/Spinner";
 import Heading from "../../ui/Heading";
 
-export default function CommentForm() {
+export default function CommentForm({ numberOfComments }) {
     const [comment, setComment] = useState('');
     const [commentError, setCommentError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -36,10 +35,10 @@ export default function CommentForm() {
         >
             <Heading
                 type={'h3'}
-                size='1.375rem'
+                size='1.25rem'
                 alignment={'left'}
             >
-                Comments
+                {`Comments (${numberOfComments})`}
             </Heading>
             <FormItem
                 id='comment'
@@ -54,6 +53,7 @@ export default function CommentForm() {
             />
             <Button
                 width='100%'
+                fontSize={'0.9375rem'}
                 disabled={isLoading}
             >
                 {isLoading ? (

@@ -17,7 +17,7 @@
     }
 
     &__content {
-        font-size: 1rem;
+        font-size: 0.9375rem;
     }
 
     &__keywords-container {
@@ -38,6 +38,7 @@
         padding: 0.25rem 1rem;
         border-radius: $border-radius-small;
         background-color: var(--element-background-color);
-        color: var(--primary-text-color);   
+        color: var(--primary-text-color);
+        font-size: 0.9375rem; 
     }
 }

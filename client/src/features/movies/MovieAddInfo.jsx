@@ -8,7 +8,7 @@ export default function MovieAddInfo({ movie }) {
             <div className='movie-add-info__heading-container'>
                 <Heading
                     type={'h3'}
-                    size={'1.375rem'}
+                    size={'1.25rem'}
                     alignment={'left'}
                 >
                     Additional information
@@ -27,8 +27,8 @@ export default function MovieAddInfo({ movie }) {
                 <div className='movie-add-info__keywords-container'>
                     <Heading
                         type={'h4'}
-                        size={'1rem'}
-                        weight={300}
+                        size={'0.9375rem'}
+                        weight={500}
                         alignment={'left'}
                     >
                         Keywords
