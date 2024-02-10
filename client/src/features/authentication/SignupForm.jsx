@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { validateUsername, validateEmail, validatePassword, validateConfirmPassword } from "../../utils/validateFormFields";
+import api from "../../api/api";
 import Form from "../../ui/Form";
 import FormItem from "../../ui/FormItem";
 import FormSpecial from "../../ui/FormSpecial";
@@ -47,16 +48,46 @@ export default function SignupForm() {
         return !usernameMessage && !emailMessage && !passwordMessage && !confirmPasswordMessage;
     };
 
-    const handleSubmit = function(e) {
+    const handleSubmit = async function(e) {
         e.preventDefault();
         
         setIsLoading(true);
+
         if (validateForm()) {
-            console.log('passed');
+            try {    
+                const response = await api.post('/authentication/signup', {
+                    emailAddress: formData.email,
+                    username: formData.username,
+                    password: formData.password,
+                });
+
+                console.log(response.data.message);
+            } catch (error) {
+                if (error.response.data.message === 'Email address already in use') {
+                    setFormErrors(prevFormErrors => ({
+                        ...prevFormErrors,
+                        emailError: 'Email address already in use',
+                    }))
+                }
+
+                if (error.response.data.message === 'Username already in use') {
+                    setFormErrors(prevFormErrors => ({
+                        ...prevFormErrors,
+                        usernameError: 'Username already in use',
+                    }))
+                }
+
+                if (error.response.data.message === 'User is logged in') {
+                    console.log('User is logged in');
+                }
+
+                return;
+            } finally {
+                setIsLoading(false);
+            }
         } else {
-            console.log('failed');
-        };
-        setIsLoading(false);
+            setIsLoading(false);
+        }
     }
 
     return (

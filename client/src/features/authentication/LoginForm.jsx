@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { validatePassword, validateUsername } from "../../utils/validateFormFields";
@@ -12,6 +12,7 @@ import Heading from "../../ui/Heading";
 import Spinner from "../../ui/Spinner";
 
 export default function LoginForm() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [usernameError, setUsernameError] = useState('');
@@ -42,15 +43,23 @@ export default function LoginForm() {
                     password,
                 });
 
-                if (response.data.message === 'User not found') {
-                    setUsernameError('User doesn\'t exist');
-                    return;
-                }
-
                 handleLogin(username);
                 changeTheme(response.data.theme);
+                navigate('/');
             } catch (error) {
-                console.log(error.response.data);
+                if (error.response.data.message === 'User not found') {
+                    setUsernameError('User doesn\'t exist');
+                }
+
+                if (error.response.data.message === 'Invalid password') {
+                    setPasswordError('Invalid password');
+                }
+
+                if (error.response.data.message === 'User is logged in') {
+                    console.log('User is logged in');
+                    navigate('/');
+                }
+
                 return;
             } finally {
                 setIsLoading(false);
