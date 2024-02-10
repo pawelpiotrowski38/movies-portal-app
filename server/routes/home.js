@@ -48,16 +48,16 @@ router.get('/', async (req, res) => {
 
         if (yearsFilter.length > 0) {
             query += ` AND EXTRACT(YEAR FROM m.release_date)::text = ANY($${values.length + 1})`;
-            countQuery += ` AND EXTRACT(YEAR FROM m.release_date)::text = ANY($${values.length + 1})`;
+            countQuery += ` AND EXTRACT(YEAR FROM m.release_date)::text = ANY($${countValues.length + 1})`;
             values.push(yearsFilter);
             countValues.push(yearsFilter);
         }
         if (genresFilter.length > 0) {
-            countQuery += ` AND g.name = ANY($${values.length + 1})`;
+            countQuery += ` AND g.name = ANY($${countValues.length + 1})`;
             countValues.push(genresFilter);
         }
         if (countriesFilter.length > 0) {
-            countQuery += ` AND c.name = ANY($${values.length + 1})`;
+            countQuery += ` AND c.name = ANY($${countValues.length + 1})`;
             countValues.push(countriesFilter);
         }
 
@@ -113,6 +113,9 @@ router.get('/', async (req, res) => {
         query += ` OFFSET $${values.length + 1} LIMIT $${values.length + 2}`;
         values.push(offset);
         values.push(limit);
+
+        console.log(query);
+        console.log(countQuery);
 
         const moviesResults = await connection.query(query, values);
         const countResults = await connection.query(countQuery, countValues);
