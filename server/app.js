@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser'; 
 import pkg from 'body-parser';
 const { json, urlencoded } = pkg;
 
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use((req, res, next) => {
     // allowed origins for localhost
@@ -25,6 +27,7 @@ app.use((req, res, next) => {
        res.setHeader('Access-Control-Allow-Origin', origin);
        res.setHeader('Access-Control-Allow-Methods', ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS']);
        res.setHeader('Access-Control-Allow-Headers', ['Content-Type']);
+       res.setHeader('Access-Control-Allow-Credentials', true);
     }
 
     next();
