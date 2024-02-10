@@ -1,3 +1,4 @@
+import { useAuth } from '../context/AuthContext';
 import { useClickOutside } from '../hooks/useClickOutside';
 import NavigationItem from './NavigationItem';
 import CloseButton from './CloseButton';
@@ -5,13 +6,16 @@ import Button from './Button';
 import './navigation.scss';
 
 export default function Navigation({ isNavigationOpen, onSetIsNavigationOpen }) {
+    const { isLoggedIn, handleLogout } = useAuth();
+
     const navigationRef = useClickOutside(() => {
         onSetIsNavigationOpen(false);
     });
 
     const handleButtonClick = function() {
+        handleLogout();
         onSetIsNavigationOpen(false);
-    };
+    }
     
     return (
         <nav
@@ -20,7 +24,7 @@ export default function Navigation({ isNavigationOpen, onSetIsNavigationOpen }) 
         >
             <div className='navigation__close-button-container'>
                 <CloseButton
-                    onCloseHandler={handleButtonClick}
+                    onCloseHandler={() => onSetIsNavigationOpen(false)}
                 />
             </div>
             <ul className='navigation__list'>
@@ -35,12 +39,21 @@ export default function Navigation({ isNavigationOpen, onSetIsNavigationOpen }) 
                 </NavigationItem>
             </ul>
             <div className='navigation__buttons'>
-                <Button
-                    linkTo='/login'
-                    onClick={handleButtonClick}
-                >
-                    Log in
-                </Button>
+                {!isLoggedIn ? (
+                    <Button
+                        linkTo='/login'
+                        onClick={() => onSetIsNavigationOpen(false)}
+                    >
+                        Log in
+                    </Button>
+                ) : (
+                    <Button
+                        onClick={handleButtonClick}
+                    >
+                        Log out
+                    </Button>
+                )}
+                
                     {/* { authContext.isLoggedIn ? (
                         <div className='navbar-account-icon'>
                             <div ref={accountIconRef} className='account-icon' onClick={handleAccountPanelOpen}>

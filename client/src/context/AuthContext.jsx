@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-// import { useTheme } from "./ThemeContext";
 import api from "../api/api";
 
 const AuthContext = createContext();
@@ -7,7 +6,6 @@ const AuthContext = createContext();
 function AuthProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState('');
-    // const { changeTheme } = useTheme();
 
     const checkLoggedIn = async function() {
         try {
@@ -28,7 +26,7 @@ function AuthProvider({ children }) {
     // logout
     const handleLogout = async () => {
         try {
-            const response = await api.get('/users/remove-cookie');
+            const response = await api.delete('/authentication/logout');
             console.log(response.data);
             setIsLoggedIn(false);
             setUsername('');
