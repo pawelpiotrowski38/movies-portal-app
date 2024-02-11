@@ -197,6 +197,80 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get('/refresh-token', async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'Missing refresh token' });
+    }
+
+    let connection = null;
+      
+    try {
+        const decodedRefreshToken = jwt.verify(refreshToken, process.env.TOKEN_KEY);
+        const expirationTime = decodedRefreshToken.exp;
+        const expirationDate = new Date(expirationTime * 1000);
+        const formattedExpirationDate = expirationDate.toLocaleString();
+        console.log('Refresh token will expire at', formattedExpirationDate);
+
+        const userId = decodedRefreshToken.userId;
+
+        connection = await pool.connect();
+
+        const selectTokenQuery = `
+            SELECT token
+            FROM refresh_tokens
+            WHERE user_id = $1;
+        `;
+
+        const selectTokenResults = await connection.query(selectTokenQuery, [userId]);
+
+        if (!selectTokenResults.rowCount) {
+            connection.release();
+            res.status(401).json({ message: 'Invalid refresh token' });
+            return;
+        }
+
+        const isMatch = await bcrypt.compare(refreshToken, selectTokenResults.rows[0].token);
+
+        if (!isMatch) {
+            connection.release();
+            res.status(401).json({ message: 'Invalid refresh token' });
+            return;
+        }
+
+        const newAccessToken = jwt.sign({ userId: userId }, process.env.TOKEN_KEY, { expiresIn: '10m' });
+        const newRefreshToken = jwt.sign({ userId: userId, type: 'refresh' }, process.env.TOKEN_KEY, { expiresIn: '7d' });
+        const hashedNewRefreshToken = await bcrypt.hash(newRefreshToken, 10);
+        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+        res.cookie('accessToken', newAccessToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 10 * 60 * 1000 });
+        res.cookie('refreshToken', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000  });
+
+        const deleteTokenQuery = `
+            DELETE FROM refresh_tokens
+            WHERE user_id = $1;
+        `;
+
+        const insertTokenQuery = `
+            INSERT INTO refresh_tokens (user_id, token, expires_at)
+            VALUES ($1, $2, $3);
+        `;
+
+        const deleteTokenResults = await connection.query(deleteTokenQuery, [userId]);
+        const insertTokenResults = await connection.query(insertTokenQuery, [userId, hashedNewRefreshToken, expiresAt]);
+
+        connection.release();
+      
+        return res.status(200).json({ accessToken: newAccessToken });
+    } catch (err) {
+        if (connection) {
+            connection.release();
+        }
+        return res.status(401).json({ message: 'Invalid or expired refresh token' });
+    }
+});
+
 router.delete('/logout', async (req, res) => {
     const refreshToken = req.cookies?.refreshToken;
 
