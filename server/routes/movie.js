@@ -5,11 +5,22 @@ const router = Router();
 
 router.get('/details/:movieId', async (req, res) => {
     const movieId = parseInt(req.params.movieId) || 0;
+    const username = req.query.username || '';
 
     let connection = null;
 
     try {
         connection = await pool.connect();
+
+        const selectUserQuery = `
+            SELECT user_id
+            FROM users
+            WHERE username = $1;
+        `;
+
+        const selectUserResults = await connection.query(selectUserQuery, [username]);
+
+        const userId = selectUserResults.rowCount ? selectUserResults.rows[0].user_id : 0;
 
         let query = `
             SELECT DISTINCT m.*,
@@ -23,12 +34,13 @@ router.get('/details/:movieId', async (req, res) => {
             JOIN genres g ON mg.genre_id = g.genre_id
             JOIN movies_countries mc ON m.movie_id = mc.movie_id
             JOIN countries c ON mc.country_id = c.country_id
-            LEFT JOIN ratings r ON m.movie_id = r.movie_id AND r.user_id = 1
-            LEFT JOIN watchlist w ON m.movie_id = w.movie_id AND w.user_id = 1
-            WHERE m.movie_id = $1
-            GROUP BY m.movie_id, r.rating, w.watchlist_id`
+            LEFT JOIN ratings r ON m.movie_id = r.movie_id AND r.user_id = $1
+            LEFT JOIN watchlist w ON m.movie_id = w.movie_id AND w.user_id = $2
+            WHERE m.movie_id = $3
+            GROUP BY m.movie_id, r.rating, w.watchlist_id
+        `;
 
-        const results = await connection.query(query, [movieId]);
+        const results = await connection.query(query, [userId, userId, movieId]);
 
         if (results.rowCount === 0) {
             res.status(404).json({ message: 'Movie not found' });

@@ -10,11 +10,24 @@ router.get('/', async (req, res) => {
     const yearsFilter = req.query.filters?.yearsFilter || [];
     const offset = req.query.offset || 0;
     const limit = req.query.limit || 10;
+    const username = req.query.username || '';
 
     let connection = null;
 
     try {
         connection = await pool.connect();
+
+        const selectUserQuery = `
+            SELECT user_id
+            FROM users
+            WHERE username = $1;
+        `;
+
+        const selectUserResults = await connection.query(selectUserQuery, [username]);
+
+        const userId = selectUserResults.rowCount ? selectUserResults.rows[0].user_id : 0;
+
+        console.log(userId);
 
         const values = [];
         const countValues = [];
@@ -41,13 +54,13 @@ router.get('/', async (req, res) => {
             JOIN genres g ON mg.genre_id = g.genre_id
             JOIN movies_countries mc ON m.movie_id = mc.movie_id
             JOIN countries c ON mc.country_id = c.country_id
-            LEFT JOIN ratings r ON m.movie_id = r.movie_id AND r.user_id = 1
-            LEFT JOIN watchlist w ON m.movie_id = w.movie_id AND w.user_id = 1
+            LEFT JOIN ratings r ON m.movie_id = r.movie_id AND r.user_id = $1
+            LEFT JOIN watchlist w ON m.movie_id = w.movie_id AND w.user_id = $2
             WHERE 1=1
         `;
 
         if (yearsFilter.length > 0) {
-            query += ` AND EXTRACT(YEAR FROM m.release_date)::text = ANY($${values.length + 1})`;
+            query += ` AND EXTRACT(YEAR FROM m.release_date)::text = ANY($${values.length + 3})`;
             countQuery += ` AND EXTRACT(YEAR FROM m.release_date)::text = ANY($${countValues.length + 1})`;
             values.push(yearsFilter);
             countValues.push(yearsFilter);
@@ -65,18 +78,18 @@ router.get('/', async (req, res) => {
 
         if (genresFilter.length > 0 && countriesFilter.length > 0) {
             query += `
-                HAVING SUM(CASE WHEN g.name = ANY($${values.length + 1}) THEN 1 ELSE 0 END) > 0
-			    AND SUM(CASE WHEN c.name = ANY($${values.length + 2}) THEN 1 ELSE 0 END) > 0
+                HAVING SUM(CASE WHEN g.name = ANY($${values.length + 3}) THEN 1 ELSE 0 END) > 0
+			    AND SUM(CASE WHEN c.name = ANY($${values.length + 4}) THEN 1 ELSE 0 END) > 0
             `
             values.push(genresFilter);
             values.push(countriesFilter);
         } else {
             if (genresFilter.length > 0) {
-                query += ` HAVING SUM(CASE WHEN g.name = ANY($${values.length + 1}) THEN 1 ELSE 0 END) > 0`;
+                query += ` HAVING SUM(CASE WHEN g.name = ANY($${values.length + 3}) THEN 1 ELSE 0 END) > 0`;
                 values.push(genresFilter);
             }
             if (countriesFilter.length > 0) {
-                query += ` HAVING SUM(CASE WHEN c.name = ANY($${values.length + 1}) THEN 1 ELSE 0 END) > 0`;
+                query += ` HAVING SUM(CASE WHEN c.name = ANY($${values.length + 3}) THEN 1 ELSE 0 END) > 0`;
                 values.push(countriesFilter);
             }
         }
@@ -110,14 +123,11 @@ router.get('/', async (req, res) => {
                 query += ' ORDER BY title ASC';
         }
 
-        query += ` OFFSET $${values.length + 1} LIMIT $${values.length + 2}`;
+        query += ` OFFSET $${values.length + 3} LIMIT $${values.length + 4}`;
         values.push(offset);
         values.push(limit);
 
-        console.log(query);
-        console.log(countQuery);
-
-        const moviesResults = await connection.query(query, values);
+        const moviesResults = await connection.query(query, [userId, userId, ...values]);
         const countResults = await connection.query(countQuery, countValues);
 
         res.status(200).json({

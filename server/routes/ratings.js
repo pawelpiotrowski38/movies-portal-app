@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import jwt from 'jsonwebtoken';
 import pool from '../config/db.js';
 
 const router = Router();
@@ -11,10 +12,23 @@ router.post('/add', async (req, res) => {
         return res.status(404).json({ message: 'Movie not found' });
     }
 
+    const accessToken = req.cookies.accessToken;
+
+    if (!accessToken) {
+        const refreshToken = req.cookies.refreshToken;
+
+        if (!refreshToken) {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
+        return res.status(401).json({ message: 'Token expired' });
+    }
+
     let connection = null;
 
     try {
-        const userId = 1; // default user
+        const decodedToken = jwt.verify(accessToken, process.env.TOKEN_KEY);
+        const userId = decodedToken.userId;
 
         connection = await pool.connect();
 
