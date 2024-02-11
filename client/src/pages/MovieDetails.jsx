@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import api from '../api/api';
 import MovieCardLarge from '../features/movies/MovieCardLarge';
 import MovieAddInfo from '../features/movies/MovieAddInfo';
@@ -10,6 +11,8 @@ import Spinner from '../ui/Spinner';
 import './movieDetails.scss';
 
 export default function MovieDetails() {
+    const { username } = useAuth();
+
     const [movie, setMovie] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const { movieParams } = useParams();
@@ -17,8 +20,12 @@ export default function MovieDetails() {
 
     useEffect(() => {
         const fetchData = async function() {
+            const queryParams = {
+                username: username,
+            }
+
             try {
-                const response = await api.get(`/movie/details/${movieId}`);
+                const response = await api.get(`/movie/details/${movieId}`, { params: queryParams });
                 setMovie(response.data.results);
             } catch (err) {
                 console.log(err.response.data.message);
@@ -28,7 +35,7 @@ export default function MovieDetails() {
         };
 
         fetchData();
-    }, [movieId]);
+    }, [movieId, username]);
 
     return (
         <div className='movie-details'>
