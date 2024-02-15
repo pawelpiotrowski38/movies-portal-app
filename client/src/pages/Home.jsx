@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useSessionStorageState } from '../hooks/useSessionStorageState';
 import api from '../api/api';
 import { genresValues, countriesValues, yearsValues, moviesSortValues, moviesSortTexts } from '../data/constants';
+import { useAuth } from '../context/AuthContext';
 import MoviesList from '../features/movies/MoviesList';
 import SelectInput from '../ui/SelectInput';
 import Filters from '../ui/Filters';
@@ -13,6 +14,8 @@ import './home.scss';
 
 export default function Home() {
     const [searchParams, setSearchParams] = useSearchParams();
+
+    const { username } = useAuth();
 
     const [movies, setMovies] = useState([]);
     const [allMoviesCount, setAllMoviesCount] = useState(0);
@@ -56,6 +59,7 @@ export default function Home() {
                 },
                 offset: 0,
                 limit: 10,
+                username: username,
             }
             try {
                 setIsLoading(true);
@@ -69,7 +73,7 @@ export default function Home() {
             }
         };
         fetchData();
-    }, [sortOption, genresFilter, countriesFilter, yearsFilter]);
+    }, [sortOption, genresFilter, countriesFilter, yearsFilter, username]);
 
     useEffect(() => {
         const paramsToUpdate = {};
@@ -99,6 +103,7 @@ export default function Home() {
             },
             offset: `${page*10}`,
             limit: 10,
+            username: username,
         }
         try {
             setIsLoading(true);
@@ -225,25 +230,27 @@ export default function Home() {
                         </Message>
                     ))
                 )}
-                <div className='home__message'>
-                    {isLoading ? (
-                        <Message>
-                            <Spinner
-                                primaryColor={'praimry-text-color'}
-                                secondaryColor={'component-background-color'}
-                            />
-                        </Message>
-                    ) : (
-                        (movies.length < allMoviesCount && (
-                            <Button
-                                width={'100%'}
-                                onClick={handleShowMore}
-                            >
-                                Show more
-                            </Button>
-                        ))
-                    )}
-                </div>
+                {(isLoading || movies.length < allMoviesCount) && (
+                    <div className='home__message'>
+                        {isLoading ? (
+                            <Message>
+                                <Spinner
+                                    primaryColor={'praimry-text-color'}
+                                    secondaryColor={'component-background-color'}
+                                />
+                            </Message>
+                        ) : (
+                            (movies.length < allMoviesCount && (
+                                <Button
+                                    width={'100%'}
+                                    onClick={handleShowMore}
+                                >
+                                    Show more
+                                </Button>
+                            ))
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     )
