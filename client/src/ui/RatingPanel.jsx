@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import api from '../api/api';
 import Heading from './Heading';
 import RatingPanelButton from './RatingPanelButton';
@@ -6,9 +7,20 @@ import Button from './Button';
 import './ratingPanel.scss';
 
 export default function RatingPanel({ movieId, userRating, userWatchlist, isThumbnail }) {
-    const [rating, setRating] = useState(userRating);
+    const { isLoggedIn } = useAuth();
+    const [rating, setRating] = useState(0);
     const [tempRating, setTempRating] = useState(0);
-    const [watchlist, setWatchlist] = useState(userWatchlist);
+    const [watchlist, setWatchlist] = useState(false);
+
+    useEffect(() => {
+        setRating(0);
+        setWatchlist(false);
+    }, [isLoggedIn]);
+
+    useEffect(() => {
+        setRating(userRating);
+        setWatchlist(userWatchlist);
+    }, [userRating, userWatchlist]);
 
     const handleRating = async function(rating) {
         try {

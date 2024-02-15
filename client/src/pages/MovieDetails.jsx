@@ -54,6 +54,7 @@ export default function MovieDetails() {
                             <div className='movie-details__sticky-container'>
                                 <div className='movie-details__rating-panel-container'>
                                     <RatingPanel
+                                        movieId={movie.movie_id}
                                         userRating={movie.rating}
                                         userWatchlist={movie.watchlist}
                                     />
