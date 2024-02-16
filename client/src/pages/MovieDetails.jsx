@@ -25,7 +25,7 @@ export default function MovieDetails() {
             }
 
             try {
-                const response = await api.get(`/movie/details/${movieId}`, { params: queryParams });
+                const response = await api.get(`/movies/${movieId}`, { params: queryParams });
                 setMovie(response.data.results);
             } catch (err) {
                 console.log(err.response.data.message);

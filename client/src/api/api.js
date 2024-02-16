@@ -29,7 +29,7 @@ api.interceptors.response.use(
                 console.log('Trying to aquire a new access token using a refresh token...');
         
                 try {
-                    const response = await api.get('/authentication/refresh-token');
+                    const response = await api.post('/auth/tokens');
                     console.log('New access token has been aquired:', response.data);
 
                     isRefreshingToken = false;
@@ -44,7 +44,7 @@ api.interceptors.response.use(
                     errorQueue = [];
                     console.log('Refresh token is expired or invalid');
                     console.log('Removing cookies...');
-                    const response = await api.delete('/authentication/logout');
+                    const response = await api.delete('/auth');
                     console.log(response.data);
         
                     window.location.replace('/login');

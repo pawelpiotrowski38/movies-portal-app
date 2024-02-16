@@ -55,7 +55,7 @@ export default function SignupForm() {
 
         if (validateForm()) {
             try {    
-                const response = await api.post('/authentication/signup', {
+                const response = await api.post('/users', {
                     emailAddress: formData.email,
                     username: formData.username,
                     password: formData.password,

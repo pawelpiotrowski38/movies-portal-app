@@ -63,7 +63,7 @@ export default function Home() {
             }
             try {
                 setIsLoading(true);
-                const response = await api.get('/', { params: queryParams });
+                const response = await api.get('/movies', { params: queryParams });
                 setMovies(response.data.results);
                 setAllMoviesCount(response.data.count);
             } catch (err) {
@@ -107,7 +107,7 @@ export default function Home() {
         }
         try {
             setIsLoading(true);
-            const response = await api.get('/', { params: queryParams });
+            const response = await api.get('/movies', { params: queryParams });
             setMovies((prevMovies) => [...prevMovies, ...response.data.results]);
             setPage((prevPage) => prevPage + 1);
         } catch (err) {

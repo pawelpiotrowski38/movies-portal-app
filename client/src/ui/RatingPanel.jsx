@@ -24,7 +24,7 @@ export default function RatingPanel({ movieId, userRating, userWatchlist, isThum
 
     const handleRating = async function(rating) {
         try {
-            const response = await api.post('/ratings/add', {
+            const response = await api.post('/movies/rate', {
                 movieId: movieId,
                 rating: rating,
             });
@@ -39,14 +39,14 @@ export default function RatingPanel({ movieId, userRating, userWatchlist, isThum
     const handleWatchlist = async function(operationType) {
         try {
             if (operationType === 'add') {
-                const response = await api.post(`/watchlist/add`, {
+                const response = await api.post(`/movies/watchlist`, {
                     movieId: movieId,
                     rating: rating,
                 });
 
                 console.log(response.data.message);
             } else if (operationType === 'delete') {
-                const response = await api.delete(`/watchlist/delete/${movieId}`);
+                const response = await api.delete(`/movies/${movieId}/watchlist`);
 
                 console.log(response.data.message);
             } else {

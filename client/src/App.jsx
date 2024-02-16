@@ -45,10 +45,10 @@ export default function App() {
             <Routes>
                 <Route element={<AppLayout />}>
                     <Route path = "/" element = {<Home/>} />
-                    <Route path = "/movie/:movieParams" element = {<MovieDetails/>} />
+                    <Route path = "/movies/:movieParams" element = {<MovieDetails/>} />
                     <Route path = "/login" element = {<Login />} />
                     <Route path = "/signup" element = {<Signup />} />
-                    <Route path = "/forgotpassword" element = {<ForgotPassword />} />
+                    <Route path = "/forgot-password" element = {<ForgotPassword />} />
                     <Route path = "/not-found" element = {<NotFound />} />
                     <Route path = "*" element = {<NotFound />} />
                     {/* <Route path = "/movies" element = {<Movies/>} />

@@ -26,7 +26,7 @@ export default function CommentForm({ movieId, onSetComments, numberOfComments, 
         setIsLoading(true);
         if (validateForm()) {
             try {
-                const response = await api.post('/comments/add', {
+                const response = await api.post('/comments', {
                     movieId: movieId,
                     content: comment,
                 });

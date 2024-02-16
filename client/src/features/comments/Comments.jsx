@@ -24,7 +24,7 @@ export default function Comments({ movieId }) {
             }
             try {
                 setIsLoading(true);
-                const response = await api.get(`/comments/${movieId}`, { params: queryParams });
+                const response = await api.get(`/movies/${movieId}/comments`, { params: queryParams });
                 setComments(response.data.results);
                 setAllCommentsCount(response.data.count);
             } catch (err) {
@@ -45,7 +45,7 @@ export default function Comments({ movieId }) {
         }
         try {
             setIsLoading(true);
-            const response = await api.get(`/comments/${movieId}`, { params: queryParams });
+            const response = await api.get(`/movies/${movieId}/comments`, { params: queryParams });
             setComments((prevComments) => [...prevComments, ...response.data.results]);
         } catch (err) {
             console.error(err);

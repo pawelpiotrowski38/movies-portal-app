@@ -38,7 +38,7 @@ export default function LoginForm() {
 
         if (validateForm()) {
             try {    
-                const response = await api.post('/authentication/login', {
+                const response = await api.post('/auth', {
                     username,
                     password,
                 });
@@ -102,7 +102,7 @@ export default function LoginForm() {
                 alignment={'right'}
                 margin={'0.125rem'}
             >
-                <Link to={'/forgotpassword'}>Forgot password?</Link>
+                <Link to={'/forgot-password'}>Forgot password?</Link>
             </FormSpecial>
             <Button
                 width='100%'

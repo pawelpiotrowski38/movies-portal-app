@@ -9,7 +9,7 @@ function AuthProvider({ children }) {
 
     const checkLoggedIn = async function() {
         try {
-            const response = await api.get('/authentication/check-user');
+            const response = await api.get('/users');
             setUsername(response.data.username);
             setIsLoggedIn(true);
         } catch (error) {
@@ -26,7 +26,7 @@ function AuthProvider({ children }) {
     // logout
     const handleLogout = async () => {
         try {
-            const response = await api.delete('/authentication/logout');
+            const response = await api.delete('/auth');
             console.log(response.data);
             setIsLoggedIn(false);
             setUsername('');
