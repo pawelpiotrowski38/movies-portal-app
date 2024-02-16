@@ -20,7 +20,6 @@ export default function Home() {
     const [movies, setMovies] = useState([]);
     const [allMoviesCount, setAllMoviesCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
-    const [page, setPage] = useState(1);
 
     const [sortOption, setSortOption] = useSessionStorageState(
         searchParams.get('sort') || '', 'title_asc', 'movies_sort_option'
@@ -101,7 +100,7 @@ export default function Home() {
                 countriesFilter,
                 yearsFilter,
             },
-            offset: `${page*10}`,
+            offset: movies.length,
             limit: 10,
             username: username,
         }
@@ -109,7 +108,6 @@ export default function Home() {
             setIsLoading(true);
             const response = await api.get('/movies', { params: queryParams });
             setMovies((prevMovies) => [...prevMovies, ...response.data.results]);
-            setPage((prevPage) => prevPage + 1);
         } catch (err) {
             console.error(err);
         } finally {
@@ -119,7 +117,6 @@ export default function Home() {
     
     const handleSortOptionChange = function(e) {
         setSortOption(e.target.value);
-        resetPage();
     };
 
     const handleToggleFilters = function() {
@@ -134,7 +131,6 @@ export default function Home() {
             updatedGenres = [...genresFilter, genre];
         }
         setGenresFilter(updatedGenres);
-        resetPage();
     };
 
     const handleCountrySelection = (country) => {
@@ -145,7 +141,6 @@ export default function Home() {
             updatedCountries = [...countriesFilter, country];
         }
         setCountriesFilter(updatedCountries);
-        resetPage();
     };
 
     const handleYearSelection = (year) => {
@@ -156,18 +151,12 @@ export default function Home() {
             updatedYears = [...yearsFilter, year];
         }
         setYearsFilter(updatedYears);
-        resetPage();
     };
 
     const handleResetFilters = () => {
         setGenresFilter([]);
         setCountriesFilter([]);
         setYearsFilter([]);
-        resetPage();
-    };
-
-    const resetPage = function() {
-        setPage(1);
     };
 
     const filters = [
