@@ -3,12 +3,10 @@ import cookieParser from 'cookie-parser';
 import pkg from 'body-parser';
 const { json, urlencoded } = pkg;
 
-import homeRouter from './routes/home.js';
-import movieRouter from './routes/movie.js';
-import ratingsRouter from './routes/ratings.js';
-import watchlistRouter from './routes/watchlist.js';
+import moviesRouter from './routes/movies.js';
 import commentsRouter from './routes/comments.js';
-import authenticationRouter from './routes/authentication.js';
+import authRouter from './routes/auth.js';
+import usersRouter from './routes/users.js';
 
 const app = express();
 
@@ -33,11 +31,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/', homeRouter);
-app.use('/movie', movieRouter);
-app.use('/ratings', ratingsRouter);
-app.use('/watchlist', watchlistRouter);
+app.use('/movies', moviesRouter);
 app.use('/comments', commentsRouter);
-app.use('/authentication', authenticationRouter);
+app.use('/auth', authRouter);
+app.use('/users', usersRouter);
 
 export default app;
