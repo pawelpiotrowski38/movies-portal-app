@@ -1,12 +1,9 @@
-import Comment from "./Comment";
 import './commentsList.scss';
 
-export default function CommentsList({ comments }) {
+export default function CommentsList({ children }) {
     return (
         <ul className='comments-list'>
-            {comments.map((comment) => (
-                <Comment key={comment.comment_id} comment={comment} />
-            ))}
+            {children}
         </ul>     
     )
 }

@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { commentsSortValues, commentsSortTexts } from '../../data/constants';
+import { useAuth } from "../../context/AuthContext";
 import api from "../../api/api";
 import SelectInput from "../../ui/SelectInput";
 import CommentForm from "./CommentForm";
 import CommentsList from "./CommentsList";
+import Comment from './Comment';
 import Message from "../../ui/Message";
 import Spinner from "../../ui/Spinner";
 import Button from "../../ui/Button";
 import './comments.scss';
 
 export default function Comments({ movieId }) {
+    const { username } = useAuth();
+
     const [comments, setComments] = useState([]);
     const [allCommentsCount, setAllCommentsCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
@@ -76,7 +80,11 @@ export default function Comments({ movieId }) {
                 />
             </div>
             {comments.length > 0 ? (
-                <CommentsList comments={comments} />
+                <CommentsList>
+                    {comments.map((comment) => (
+                        <Comment key={comment.comment_id} comment={comment} username={username} />
+                    ))}
+                </CommentsList>
             ) : (
                 (!isLoading && (
                     <Message>
