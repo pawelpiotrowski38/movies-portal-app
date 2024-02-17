@@ -22,12 +22,16 @@ export default function CommentEdit({ comment, onSetEditOpen, onHandleEditCommen
         setIsLoading(true);
         if (validateForm()) {
             try {
+                if (commentEdit === comment.content) {
+                    setCommentError('Comment has not been updated as no changes were made.');
+                    return;
+                }
                 const response = await api.patch('/comments', {
                     commentId: comment.comment_id,
                     content: commentEdit,
                 });
 
-                onHandleEditComment(commentEdit)
+                onHandleEditComment(commentEdit);
                 onSetEditOpen(false);
                 console.log(response.data.message);
             } catch (error) {
@@ -51,6 +55,9 @@ export default function CommentEdit({ comment, onSetEditOpen, onHandleEditCommen
                 rows={3}
                 maxLength={200}
             />
+            <div className='comment-edit__error'>
+                {commentError}
+            </div>
             <div className='comment-edit__buttons-container'>
                 <Button
                     width={'5.25rem'}
