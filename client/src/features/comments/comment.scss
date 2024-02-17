@@ -32,6 +32,22 @@
     }
 
     &__content {
+        margin-bottom: 0.75rem;
         font-size: 0.9375rem;
+    }
+
+    &__buttons-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        & >:first-child {
+            margin-right: 0.375rem;
+        }
+    }
+
+    &__deleted {
+        font-size: 0.9375rem;
+        color: var(--secondary-text-color);
     }
 }
