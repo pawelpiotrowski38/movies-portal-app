@@ -2,15 +2,19 @@ import './spinner.scss';
 
 export default function Spinner({ 
     primaryColor,
-    secondaryColor,
-    duration
+    duration,
+    size,
+    width,
 }) {
     const styles = {
-        borderTopColor: `var(--${secondaryColor})`,
+        borderTopColor: `transparent`,
         borderRightColor: `var(--${primaryColor})`,
         borderBottomColor: `var(--${primaryColor})`,
         borderLeftColor: `var(--${primaryColor})`,
         animationDuration: duration,
+        width: size,
+        height: size,
+        borderWidth: width,
     }
 
     return (
@@ -22,6 +26,7 @@ export default function Spinner({
 
 Spinner.defaultProps = {
     primaryColor: 'primary-text-color',
-    secondaryColor: 'secondary-text-color',
     duration: '1s',
+    size: '1.375rem',
+    width: '0.1875rem',
 };
