@@ -1,9 +1,11 @@
 @use '../../styles/abstracts/variables' as *;
 
 .comment {
-    padding: 0.6875rem;
+    position: relative;
+    padding: 0.6875rem 0.875rem;
     background-color: var(--element-background-color);
     border-radius: $border-radius-medium;
+    overflow: hidden;
 
     &__header {
         display: flex;
@@ -49,5 +51,14 @@
     &__deleted {
         font-size: 0.9375rem;
         color: var(--secondary-text-color);
+    }
+
+    &__owner-border {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0.3125rem;
+        height: 100%;
+        background-color: var(--button-background-color);
     }
 }

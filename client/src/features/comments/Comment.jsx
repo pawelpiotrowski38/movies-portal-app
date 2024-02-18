@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import api from '../../api/api';
 import Button from '../../ui/Button';
-import './comment.scss';
 import CommentEdit from './CommentEdit';
 import Spinner from '../../ui/Spinner';
-import api from '../../api/api';
+import './comment.scss';
 
 export default function Comment({ comment, username }) {
     const [commentObj, setCommentObj] = useState(comment);
@@ -94,7 +94,9 @@ export default function Comment({ comment, username }) {
                     onHandleEditComment={handleEditComment}
                 />
             )}
-            
+            {username === comment.username && (
+                <div className='comment__owner-border'></div>
+            )}
         </article>
     )
 }
