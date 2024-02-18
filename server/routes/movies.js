@@ -343,6 +343,51 @@ router.post('/rate', async (req, res) => {
     }
 });
 
+router.delete('/:movieId/ratings', async (req, res) => {
+    const movieId = parseInt(req.params.movieId) || 0;
+
+    if (movieId === 0) {
+        return res.status(404).json({ message: 'Movie not found' });
+    }
+
+    const accessToken = req.cookies.accessToken;
+
+    if (!accessToken) {
+        const refreshToken = req.cookies.refreshToken;
+
+        if (!refreshToken) {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
+        return res.status(401).json({ message: 'Token expired' });
+    }
+
+    let connection = null;
+
+    try {
+        const decodedToken = jwt.verify(accessToken, process.env.TOKEN_KEY);
+        const userId = decodedToken.userId;
+
+        connection = await pool.connect();
+
+        const deleteRatingQuery = `
+            DELETE FROM ratings
+            WHERE user_id = $1 AND movie_id = $2;
+        `;
+
+        const deleteRatingResults = await connection.query(deleteRatingQuery, [userId, movieId]);
+        
+        res.status(200).json({ message: 'Rating has been deleted successfully' });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Internal server error', err: error });
+    } finally {
+        if (connection) {
+            connection.release();
+        }
+    }
+});
+
 router.post('/watchlist', async (req, res) => {
     const movieId = req.body.movieId || 0;
 
