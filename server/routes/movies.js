@@ -411,12 +411,34 @@ router.delete('/:movieId/ratings', async (req, res) => {
 
         connection = await pool.connect();
 
+        const selectRatingQuery = `
+            SELECT rating FROM ratings
+            WHERE user_id = $1 AND movie_id = $2;
+        `;
+
+        const selectRatingResults = await connection.query(selectRatingQuery, [userId, movieId]);
+
+        if (selectRatingResults.rowCount === 0) {
+            return res.status(404).json({ message: 'Rating not found' });
+        }
+
+        const oldRating = selectRatingResults.rows[0].rating;
+
         const deleteRatingQuery = `
             DELETE FROM ratings
             WHERE user_id = $1 AND movie_id = $2;
         `;
 
         const deleteRatingResults = await connection.query(deleteRatingQuery, [userId, movieId]);
+
+        const updateMovieQuery = `
+            UPDATE movies
+            SET number_of_ratings = number_of_ratings - 1,
+            sum_of_ratings = sum_of_ratings - $1
+            WHERE movie_id = $2;
+        `;
+
+        const updateMovieResults = await connection.query(updateMovieQuery, [oldRating, movieId]);
         
         res.status(200).json({ message: 'Rating has been deleted successfully' });
     } catch (error) {
