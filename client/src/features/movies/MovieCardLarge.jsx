@@ -8,20 +8,31 @@ export default function MovieCardLarge({ movie }) {
     const movieGenres = capitalizeFirstLetter(movie.genres_names);
     const countriesList = movie.countries_names.split(',');
 
+    const imageFallback = function(event) {
+        event.target.src = '/images/thumbnail.jpg';
+    };
+
     return (
-        <div className='movie-card-large'>                   
+        <section className='movie-card-large'>                   
             <div className='movie-card-large__image-container'>
-                <img className='movie-card-large__image' src={`/images/thumbnail.jpg`} alt={`${movie.title} poster`} />
+                <img
+                    className='movie-card-large__image'
+                    src={movie.poster_url}
+                    onError={imageFallback}
+                    alt={`${movie.title} poster`}
+                />
             </div>           
             <div className='movie-card-large__details-container'>
                 <div className='movie-card-large__main-info-container'>
-                    <div className='movie-card-large__title'>
-                        <Heading
-                            type={'h2'}
-                            alignment={'left'}
-                        >
-                            {movie.title}
-                        </Heading>
+                    <div className='movie-card-large__title-container'>
+                        <div className='movie-card-large__title'>
+                            <Heading
+                                type={'h2'}
+                                alignment={'left'}
+                            >
+                                {movie.title}
+                            </Heading>
+                        </div>
                         <div className='movie-card-large__info-container'>
                             {movieGenres.length === 1 ? (
                                 <div className='movie-card-large__info-container'>
@@ -79,6 +90,6 @@ export default function MovieCardLarge({ movie }) {
                     <p className='movie-card-large__info--md'>Language: English</p>
                 </div>
             </div>
-        </div>
+        </section>
     )
 }

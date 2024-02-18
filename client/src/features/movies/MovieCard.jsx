@@ -19,13 +19,18 @@ export default function MovieCard({ movie }) {
         setIsPanelVisible(false);
     });
 
+    const imageFallback = function(event) {
+        event.target.src = '/images/thumbnail.jpg';
+    };
+
     return (
         <li className='movie-card'>
             <div className='movie-card__image-container'>
-                <Link to={`/movie/${movie.movie_id}-${movieTitle}`} >
+                <Link to={`/movies/${movie.movie_id}-${movieTitle}`} >
                     <img
                         className='movie-card__image'
-                        src={`/images/thumbnail.jpg`}
+                        src={movie.poster_url}
+                        onError={imageFallback}
                         alt={`Poster of ${movie.title}`}
                     />
                 </Link>
