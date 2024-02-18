@@ -23,15 +23,29 @@ export default function RatingPanel({ movieId, userRating, userWatchlist, isThum
         setWatchlist(userWatchlist);
     }, [userRating, userWatchlist]);
 
-    const handleRating = async function(rating) {
+    const handleRating = async function(newRating) {
+        const requestMethod = rating > 0 ? 'patch' : 'post';
+        console.log(requestMethod);
+
         try {
-            const response = await api.post('/movies/rate', {
-                movieId: movieId,
-                rating: rating,
-            });
-            setRating(rating);
+            if (requestMethod === 'post') {
+                const response = await api.post(`/movies/ratings`, {
+                    movieId: movieId,
+                    rating: newRating,
+                });
+
+                console.log(response.data.message);
+            }
+
+            if (requestMethod === 'patch') {
+                const response = await api.patch(`/movies/${movieId}/ratings`, {
+                    rating: newRating,
+                });
+
+                console.log(response.data.message);
+            }
             
-            console.log(response.data.message);
+            setRating(newRating);
         } catch (error) {
             console.log(error.response);
         }
