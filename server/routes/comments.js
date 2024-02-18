@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import jwt from 'jsonwebtoken';
+import { verifyAccessToken } from '../middlewares/verifyAccessToken.js';
 import pool from '../config/db.js';
 
 const router = Router();
 
-router.post('/', async (req, res) => {
+router.post('/', verifyAccessToken, async (req, res) => {
     const movieId = req.body.movieId || 0;
     const content = req.body.content || '';
 
@@ -15,8 +15,6 @@ router.post('/', async (req, res) => {
     let connection = null;
 
     try {
-        const userId = 1; // default user
-
         connection = await pool.connect();
 
         const addCommentQuery = `
@@ -25,7 +23,7 @@ router.post('/', async (req, res) => {
             RETURNING comment_id;
         `;
 
-        const addCommentResults = await connection.query(addCommentQuery, [userId, movieId, content]);
+        const addCommentResults = await connection.query(addCommentQuery, [req.userId, movieId, content]);
 
         const selectNewCommentQuery = `
             SELECT c.*, u.username
@@ -50,7 +48,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.patch('/', async (req, res) => {
+router.patch('/', verifyAccessToken, async (req, res) => {
     const commentId = req.body.commentId || 0;
     const content = req.body.content || '';
 
@@ -58,24 +56,9 @@ router.patch('/', async (req, res) => {
         return res.status(404).json({ message: 'Comment not found' });
     }
 
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) {
-        const refreshToken = req.cookies.refreshToken;
-
-        if (!refreshToken) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-
-        return res.status(401).json({ message: 'Token expired' });
-    }
-
     let connection = null;
 
     try {
-        const decodedToken = jwt.verify(accessToken, process.env.TOKEN_KEY);
-        const userId = decodedToken.userId;
-
         connection = await pool.connect();
 
         const updateCommentQuery = `
@@ -84,7 +67,7 @@ router.patch('/', async (req, res) => {
             WHERE comment_id = $2 AND user_id = $3;
         `;
 
-        const updateCommentResults = await connection.query(updateCommentQuery, [content, commentId, userId]);
+        const updateCommentResults = await connection.query(updateCommentQuery, [content, commentId, req.userId]);
         
         res.status(200).json({
             message: 'Comment has been updated successfully',
@@ -99,31 +82,16 @@ router.patch('/', async (req, res) => {
     }
 });
 
-router.delete('/:commentId', async (req, res) => {
+router.delete('/:commentId', verifyAccessToken, async (req, res) => {
     const commentId = parseInt(req.params.commentId) || 0;
 
     if (commentId === 0) {
         return res.status(404).json({ message: 'Comment not found' });
     }
 
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) {
-        const refreshToken = req.cookies.refreshToken;
-
-        if (!refreshToken) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-
-        return res.status(401).json({ message: 'Token expired' });
-    }
-
     let connection = null;
 
     try {
-        const decodedToken = jwt.verify(accessToken, process.env.TOKEN_KEY);
-        const userId = decodedToken.userId;
-
         connection = await pool.connect();
 
         const deleteCommentQuery = `
@@ -132,7 +100,7 @@ router.delete('/:commentId', async (req, res) => {
             WHERE comment_id = $1 AND user_id = $2;
         `;
 
-        const deleteCommentResults = await connection.query(deleteCommentQuery, [commentId, userId]);
+        const deleteCommentResults = await connection.query(deleteCommentQuery, [commentId, req.userId]);
         
         res.status(200).json({ message: 'Comment has been deleted successfully' });
     } catch (error) {

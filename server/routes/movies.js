@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import jwt from 'jsonwebtoken';
+import { verifyAccessToken } from '../middlewares/verifyAccessToken.js';
 import pool from '../config/db.js';
 
 const router = Router();
@@ -259,7 +259,7 @@ router.get('/:movieId/comments', async (req, res) => {
     }
 });
 
-router.post('/ratings', async (req, res) => {
+router.post('/ratings', verifyAccessToken, async (req, res) => {
     const movieId = req.body.movieId || 0;
     const rating = req.body.rating || 0;
 
@@ -267,24 +267,9 @@ router.post('/ratings', async (req, res) => {
         return res.status(404).json({ message: 'Movie not found' });
     }
 
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) {
-        const refreshToken = req.cookies.refreshToken;
-
-        if (!refreshToken) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-
-        return res.status(401).json({ message: 'Token expired' });
-    }
-
     let connection = null;
 
     try {
-        const decodedToken = jwt.verify(accessToken, process.env.TOKEN_KEY);
-        const userId = decodedToken.userId;
-
         connection = await pool.connect();
 
         const insertRatingQuery = `
@@ -292,7 +277,7 @@ router.post('/ratings', async (req, res) => {
             VALUES ($1, $2, $3);
         `;
 
-        const insertRatingResults = await connection.query(insertRatingQuery, [userId, movieId, rating]);
+        const insertRatingResults = await connection.query(insertRatingQuery, [req.userId, movieId, rating]);
 
         const updateMovieQuery = `
             UPDATE movies
@@ -314,7 +299,7 @@ router.post('/ratings', async (req, res) => {
     }
 });
 
-router.patch('/:movieId/ratings', async (req, res) => {
+router.patch('/:movieId/ratings', verifyAccessToken, async (req, res) => {
     const movieId = parseInt(req.params.movieId) || 0;
     const rating = req.body.rating || 0;
 
@@ -322,24 +307,9 @@ router.patch('/:movieId/ratings', async (req, res) => {
         return res.status(404).json({ message: 'Movie not found' });
     }
 
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) {
-        const refreshToken = req.cookies.refreshToken;
-
-        if (!refreshToken) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-
-        return res.status(401).json({ message: 'Token expired' });
-    }
-
     let connection = null;
 
     try {
-        const decodedToken = jwt.verify(accessToken, process.env.TOKEN_KEY);
-        const userId = decodedToken.userId;
-
         connection = await pool.connect();
 
         const checkRatingQuery = `
@@ -347,7 +317,7 @@ router.patch('/:movieId/ratings', async (req, res) => {
             WHERE user_id = $1 AND movie_id = $2;
         `;
 
-        const checkRatingResults = await connection.query(checkRatingQuery, [userId, movieId]);
+        const checkRatingResults = await connection.query(checkRatingQuery, [req.userId, movieId]);
 
         if (checkRatingResults.rowCount === 0) {
             return res.status(404).json({ message: 'Rating not found' });
@@ -361,7 +331,7 @@ router.patch('/:movieId/ratings', async (req, res) => {
             WHERE user_id = $2 AND movie_id = $3;
         `;
 
-        const updateRatingResults = await connection.query(updateRatingQuery, [rating, userId, movieId]);
+        const updateRatingResults = await connection.query(updateRatingQuery, [rating, req.userId, movieId]);
 
         const ratingDiff = rating - oldRating;
 
@@ -384,31 +354,16 @@ router.patch('/:movieId/ratings', async (req, res) => {
     }
 });
 
-router.delete('/:movieId/ratings', async (req, res) => {
+router.delete('/:movieId/ratings', verifyAccessToken, async (req, res) => {
     const movieId = parseInt(req.params.movieId) || 0;
 
     if (movieId === 0) {
         return res.status(404).json({ message: 'Movie not found' });
     }
 
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) {
-        const refreshToken = req.cookies.refreshToken;
-
-        if (!refreshToken) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-
-        return res.status(401).json({ message: 'Token expired' });
-    }
-
     let connection = null;
 
     try {
-        const decodedToken = jwt.verify(accessToken, process.env.TOKEN_KEY);
-        const userId = decodedToken.userId;
-
         connection = await pool.connect();
 
         const selectRatingQuery = `
@@ -416,7 +371,7 @@ router.delete('/:movieId/ratings', async (req, res) => {
             WHERE user_id = $1 AND movie_id = $2;
         `;
 
-        const selectRatingResults = await connection.query(selectRatingQuery, [userId, movieId]);
+        const selectRatingResults = await connection.query(selectRatingQuery, [req.userId, movieId]);
 
         if (selectRatingResults.rowCount === 0) {
             return res.status(404).json({ message: 'Rating not found' });
@@ -429,7 +384,7 @@ router.delete('/:movieId/ratings', async (req, res) => {
             WHERE user_id = $1 AND movie_id = $2;
         `;
 
-        const deleteRatingResults = await connection.query(deleteRatingQuery, [userId, movieId]);
+        const deleteRatingResults = await connection.query(deleteRatingQuery, [req.userId, movieId]);
 
         const updateMovieQuery = `
             UPDATE movies
@@ -451,31 +406,16 @@ router.delete('/:movieId/ratings', async (req, res) => {
     }
 });
 
-router.post('/watchlist', async (req, res) => {
+router.post('/watchlist', verifyAccessToken, async (req, res) => {
     const movieId = req.body.movieId || 0;
 
     if (movieId === 0) {
         return res.status(404).json({ message: 'Movie not found' });
     }
 
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) {
-        const refreshToken = req.cookies.refreshToken;
-
-        if (!refreshToken) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-
-        return res.status(401).json({ message: 'Token expired' });
-    }
-
     let connection = null;
 
     try {
-        const decodedToken = jwt.verify(accessToken, process.env.TOKEN_KEY);
-        const userId = decodedToken.userId;
-
         connection = await pool.connect();
 
         const checkWatchlistQuery = `
@@ -483,7 +423,7 @@ router.post('/watchlist', async (req, res) => {
             WHERE user_id = $1 AND movie_id = $2;
         `;
 
-        const checkWatchlistResults = await connection.query(checkWatchlistQuery, [userId, movieId]);
+        const checkWatchlistResults = await connection.query(checkWatchlistQuery, [req.userId, movieId]);
 
         if (!checkWatchlistResults.rowCount) {
             const insertWatchlistQuery = `
@@ -491,7 +431,7 @@ router.post('/watchlist', async (req, res) => {
                 VALUES ($1, $2);
             `;
 
-            const insertWatchlistResults = await connection.query(insertWatchlistQuery, [userId, movieId]);
+            const insertWatchlistResults = await connection.query(insertWatchlistQuery, [req.userId, movieId]);
         } else {
             return res.status(201).json({ message: 'Movie is already on the watchlist' });
         }
@@ -507,31 +447,16 @@ router.post('/watchlist', async (req, res) => {
     }
 });
 
-router.delete('/:movieId/watchlist', async (req, res) => {
+router.delete('/:movieId/watchlist', verifyAccessToken, async (req, res) => {
     const movieId = parseInt(req.params.movieId) || 0;
 
     if (movieId === 0) {
         return res.status(404).json({ message: 'Movie not found' });
     }
 
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) {
-        const refreshToken = req.cookies.refreshToken;
-
-        if (!refreshToken) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-
-        return res.status(401).json({ message: 'Token expired' });
-    }
-
     let connection = null;
 
     try {
-        const decodedToken = jwt.verify(accessToken, process.env.TOKEN_KEY);
-        const userId = decodedToken.userId;
-
         connection = await pool.connect();
 
         const deleteWatchlistQuery = `
@@ -539,7 +464,7 @@ router.delete('/:movieId/watchlist', async (req, res) => {
             WHERE user_id = $1 AND movie_id = $2;
         `;
 
-        const deleteWatchlistResults = await connection.query(deleteWatchlistQuery, [userId, movieId]);
+        const deleteWatchlistResults = await connection.query(deleteWatchlistQuery, [req.userId, movieId]);
         
         res.status(200).json({ message: 'Movie has been deleted from the watchlist successfully' });
     } catch (error) {
