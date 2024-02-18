@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { IoTrashBin } from "react-icons/io5";
 import api from '../api/api';
 import Heading from './Heading';
 import RatingPanelButton from './RatingPanelButton';
@@ -29,6 +30,17 @@ export default function RatingPanel({ movieId, userRating, userWatchlist, isThum
                 rating: rating,
             });
             setRating(rating);
+            
+            console.log(response.data.message);
+        } catch (error) {
+            console.log(error.response);
+        }
+    }
+
+    const handleRatingDeletion = async function() {
+        try {
+            const response = await api.delete(`/movies/${movieId}/ratings`);
+            setRating(0);
             
             console.log(response.data.message);
         } catch (error) {
@@ -74,6 +86,14 @@ export default function RatingPanel({ movieId, userRating, userWatchlist, isThum
                             'Rate movie'
                         )}
                     </Heading>
+                    {rating > 0 && !tempRating && (
+                        <button
+                            className='rating-panel__delete-button'
+                            onClick={handleRatingDeletion}
+                        >
+                            <IoTrashBin />
+                        </button>
+                    )}
                 </div>
                 <div className='rating-panel__ratings'>
                     {Array.from({ length: 10 }, (_, i) => (
