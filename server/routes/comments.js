@@ -48,8 +48,8 @@ router.post('/', verifyAccessToken, async (req, res) => {
     }
 });
 
-router.patch('/', verifyAccessToken, async (req, res) => {
-    const commentId = req.body.commentId || 0;
+router.patch('/:commentId', verifyAccessToken, async (req, res) => {
+    const commentId = parseInt(req.params.commentId) || 0;
     const content = req.body.content || '';
 
     if (commentId === 0) {

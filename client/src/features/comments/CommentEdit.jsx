@@ -26,8 +26,7 @@ export default function CommentEdit({ comment, onSetEditOpen, onHandleEditCommen
                     setCommentError('Comment has not been updated as no changes were made.');
                     return;
                 }
-                const response = await api.patch('/comments', {
-                    commentId: comment.comment_id,
+                const response = await api.patch(`/comments/${comment.comment_id}`, {
                     content: commentEdit,
                 });
 
