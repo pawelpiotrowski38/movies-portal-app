@@ -24,6 +24,7 @@
     &__add-container {
         display: flex;
         flex-direction: column;
+        width: 100%;
 
         & >:not(:last-child) {
             margin-bottom: 0.75rem;
