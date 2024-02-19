@@ -31,9 +31,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/movies', moviesRouter);
-app.use('/comments', commentsRouter);
-app.use('/auth', authRouter);
-app.use('/users', usersRouter);
+app.use('/api/movies', moviesRouter);
+app.use('/api/comments', commentsRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/users', usersRouter);
 
 export default app;
