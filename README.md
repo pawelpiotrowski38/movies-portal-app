@@ -6,6 +6,7 @@
 - [Features](#features)
 - [Built With](#built-with)
 - [API Endpoints](#api-endpoints)
+- [Screenshots](#screenshots)
 
 ## Description
 
@@ -69,3 +70,17 @@ Logged in users additionally are able to:
 | POST | /api/comments | Add a comment |
 | PATCH | /api/comments/:commentId | Edit a comment |
 | DELETE | /api/comments/:commentId | Delete a comment |
+
+## Screenshots
+
+### Movies list
+![movies-list-screenshot](/assets/screenshots/movies-portal-app-movies-list.png?raw=true)
+
+### Movie details
+![movie-details-screenshot](/assets/screenshots/movies-portal-app-movie-details.png?raw=true)
+
+### Movie comments
+![movie-details-comments-screenshot](/assets/screenshots/movies-portal-app-movie-details-comments.png?raw=true)
+
+### Movies list (light theme)
+![movies-list-light-screenshot](/assets/screenshots/movies-portal-app-movies-list-light.png?raw=true)
