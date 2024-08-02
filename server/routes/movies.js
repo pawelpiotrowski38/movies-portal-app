@@ -205,6 +205,7 @@ router.get('/:movieId/comments', async (req, res) => {
     const sortOption = req.query.sortOption || 'new';
     const offset = req.query.offset || 0;
     const limit = req.query.limit || 2;
+    const username = req.query.username || '';
 
     if (movieId === 0) {
         return res.status(404).json({ message: 'Movie not found' });
@@ -215,12 +216,25 @@ router.get('/:movieId/comments', async (req, res) => {
     try {
         connection = await pool.connect();
 
+        const selectUserQuery = `
+            SELECT user_id
+            FROM users
+            WHERE username = $1;
+        `;
+
+        const selectUserResults = await connection.query(selectUserQuery, [username]);
+
+        const userId = selectUserResults.rowCount ? selectUserResults.rows[0].user_id : 0;
+
+        console.log(userId);
+
         let selectCommentsQuery = `
-            SELECT c.*, u.username
+            SELECT c.*, u.username, l.user_id IS NOT NULL AS liked_by_user
             FROM comments c
             LEFT JOIN users u ON c.user_id = u.user_id
-            WHERE c.movie_id = $1
-            GROUP BY c.comment_id, u.username
+            LEFT JOIN likes l ON c.comment_id = l.comment_id AND l.user_id = $1
+            WHERE c.movie_id = $2
+            GROUP BY c.comment_id, u.username, l.user_id
         `;
 
         switch (sortOption) {
@@ -234,7 +248,7 @@ router.get('/:movieId/comments', async (req, res) => {
                 selectCommentsQuery += ' ORDER BY created_at DESC';
         }
 
-        selectCommentsQuery += ` OFFSET $2 LIMIT $3`;
+        selectCommentsQuery += ` OFFSET $3 LIMIT $4`;
 
         const countCommentsQuery = `
             SELECT COUNT(DISTINCT comment_id) AS count
@@ -242,7 +256,7 @@ router.get('/:movieId/comments', async (req, res) => {
             WHERE movie_id = $1;
         `;
 
-        const selectCommentsResults = await connection.query(selectCommentsQuery, [movieId, offset, limit]);
+        const selectCommentsResults = await connection.query(selectCommentsQuery, [userId, movieId, offset, limit]);
         const countCommentsResults = await connection.query(countCommentsQuery, [movieId]);
         
         res.status(200).json({
