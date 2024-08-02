@@ -72,7 +72,7 @@ Logged in users additionally are able to:
 | PATCH | /api/comments/:commentId | Edit a comment |
 | DELETE | /api/comments/:commentId | Delete a comment |
 | POST | /api/comments/likes | Like a comment |
-| DELETE | /api/comments/:commentId/likes | Delete a like from a comment |
+| DELETE | /api/comments/:commentId/likes | Unlike a comment |
 
 ## Screenshots
 
