@@ -13,7 +13,6 @@ import './comments.scss';
 
 export default function Comments({ movieId }) {
     const { username } = useAuth();
-
     const [comments, setComments] = useState([]);
     const [allCommentsCount, setAllCommentsCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
@@ -25,6 +24,7 @@ export default function Comments({ movieId }) {
                 sortOption: sortOption,
                 offset: 0,
                 limit: 10,
+                username: username,
             }
             try {
                 setIsLoading(true);
@@ -39,13 +39,14 @@ export default function Comments({ movieId }) {
         };
 
         fetchData();
-    }, [movieId, sortOption]);
+    }, [movieId, sortOption, username]);
 
     const handleShowMore = async function() {
         const queryParams = {
             sortOption: sortOption,
             offset: comments.length,
             limit: 10,
+            username: username,
         }
         try {
             setIsLoading(true);
