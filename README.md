@@ -24,6 +24,7 @@ Logged in users additionally are able to:
 - add, edit and remove movie ratings
 - add and remove a movie from user's watchlist
 - add, edit and remove movie comments
+- add and remove a like from movie comments
 
 ## Built With
 
@@ -70,6 +71,8 @@ Logged in users additionally are able to:
 | POST | /api/comments | Add a comment |
 | PATCH | /api/comments/:commentId | Edit a comment |
 | DELETE | /api/comments/:commentId | Delete a comment |
+| POST | /api/comments/likes | Like a comment |
+| DELETE | /api/comments/:commentId/likes | Delete a like from a comment |
 
 ## Screenshots
 
