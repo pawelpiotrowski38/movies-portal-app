@@ -2,7 +2,8 @@
 @use '../styles/abstracts/mixins' as *;
 
 .header {
-    position: relative;
+    position: sticky;
+    top: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -11,6 +12,7 @@
     margin-bottom: 0.5rem;
     padding: 0 0.75rem;
     background-color: var(--component-background-color);
+    box-shadow: 0 0 1rem var(--component-background-color);
     transition: all $transition-time ease-in-out;
     z-index: 10;
 
