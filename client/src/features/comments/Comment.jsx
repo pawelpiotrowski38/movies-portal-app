@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import api from '../../api/api';
 import Button from '../../ui/Button';
+import CommentLike from './CommentLike';
 import CommentEdit from './CommentEdit';
 import Spinner from '../../ui/Spinner';
 import './comment.scss';
@@ -34,6 +35,14 @@ export default function Comment({ comment, username }) {
         }
     };
 
+    const handleLikeComment = function(number) {
+        setCommentObj(prevComment => ({
+            ...prevComment,
+            number_of_likes: prevComment.number_of_likes + number,
+            liked_by_user : number > 0 ? true : false,
+        }));
+    }
+
     return (
         <article className='comment'>
             <div className='comment__header'>
@@ -46,6 +55,10 @@ export default function Comment({ comment, username }) {
                         {new Date(commentObj.created_at).toLocaleString()}
                     </p>
                 </div>
+                <CommentLike
+                    comment={commentObj}
+                    onHandleLikeComment={handleLikeComment}
+                />
             </div>
             {!editOpen ? (
                 <>

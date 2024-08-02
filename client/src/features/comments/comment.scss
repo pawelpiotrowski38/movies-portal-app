@@ -22,6 +22,10 @@
         background-color: var(--primary-text-color);
     }
 
+    &__info {
+        flex: 1;
+    }
+
     &__author {
         color: var(--button-background-color);
         font-size: 0.9375rem;
