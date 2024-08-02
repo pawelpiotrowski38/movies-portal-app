@@ -113,4 +113,80 @@ router.delete('/:commentId', verifyAccessToken, async (req, res) => {
     }
 });
 
+router.post('/likes', verifyAccessToken, async (req, res) => {
+    const commentId = req.body.commentId || 0;
+
+    if (commentId === 0) {
+        return res.status(404).json({ message: 'Comment not found' });
+    }
+
+    let connection = null;
+
+    try {
+        connection = await pool.connect();
+
+        const insertLikeQuery = `
+            INSERT INTO likes (user_id, comment_id)
+            VALUES ($1, $2);
+        `;
+
+        const insertLikeResults = await connection.query(insertLikeQuery, [req.userId, commentId]);
+
+        const updateCommentsQuery = `
+            UPDATE comments
+            SET number_of_likes = number_of_likes + 1
+            WHERE comment_id = $1;
+        `;
+
+        const updateCommentsResults = await connection.query(updateCommentsQuery, [commentId]);
+        
+        res.status(201).json({ message: 'Like has been added successfully' });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Internal server error', err: error });
+    } finally {
+        if (connection) {
+            connection.release();
+        }
+    }
+});
+
+router.delete('/:commentId/likes', verifyAccessToken, async (req, res) => {
+    const commentId = parseInt(req.params.commentId) || 0;
+
+    if (commentId === 0) {
+        return res.status(404).json({ message: 'comment not found' });
+    }
+
+    let connection = null;
+
+    try {
+        connection = await pool.connect();
+
+        const deleteLikeQuery = `
+            DELETE FROM likes
+            WHERE user_id = $1 AND comment_id = $2;
+        `;
+
+        const deleteLikeResults = await connection.query(deleteLikeQuery, [req.userId, commentId]);
+
+        const updateCommentsQuery = `
+            UPDATE comments
+            SET number_of_likes = number_of_likes - 1
+            WHERE comment_id = $1;
+        `;
+
+        const updateCommentsResults = await connection.query(updateCommentsQuery, [commentId]);
+        
+        res.status(200).json({ message: 'Like has been deleted successfully' });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Internal server error', err: error });
+    } finally {
+        if (connection) {
+            connection.release();
+        }
+    }
+});
+
 export default router;
