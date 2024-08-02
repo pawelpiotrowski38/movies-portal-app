@@ -1,0 +1,15 @@
+@use '../styles/abstracts/variables' as *;
+
+.like-button {
+    color: var(--primary-text-color);
+
+    & > svg {
+        stroke-width: 70px;
+        fill: var(--element-background-color);
+        stroke: var(--button-background-color);
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}
